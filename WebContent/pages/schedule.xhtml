@@ -1,0 +1,342 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<style type="text/css">
+.panelgridPadding tr,.panelgridPadding td {
+	border: none;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-right: 5px;
+	padding-left: 5px;
+	padding-top: 5px;
+}
+</style>
+</h:head>
+<body>
+	<p:blockUI trigger="selectdevice" block="inspectpanelgroup">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI trigger="savebtn" block="inspectpanelgroup">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<h3 style="margin-top: 0;" class="ui-widget-header ui-corner-all">
+		<h:outputText value="Maintenance Schedule" />
+	</h3>
+	<p:fieldset>
+		<h:panelGrid columns="2" cellpadding="3" style="float:left">
+			<h:outputText value="Aircraft" />
+			<p:selectOneMenu value="#{scheduleManager.aircraftID}"
+				id="selectdevice" style="width:250px">
+				<f:selectItems value="#{scheduleManager.aircraftSelectItemList}" />
+				<p:ajax listener="#{scheduleManager.aircraftSelected}"
+					update="scheduleList" oncomplete="scheduleWidget.filter()" />
+			</p:selectOneMenu>
+		</h:panelGrid>
+		<p:fieldset legend="Threshold" style="float:right" toggleable="true"
+			collapsed="true">
+			<h:panelGrid columns="1">
+				<h:outputText value="Day Left" style="font-weight:bold" />
+				<h:panelGrid columns="6">
+					<h:outputText value="Info" />
+					<p:inputText style="width:50px;background:yellow"
+						value="#{scheduleManager.editThreshold.dayLeftInfo}" />
+					<h:outputText value="Warn" />
+					<p:inputText style="width:50px;background:orange"
+						value="#{scheduleManager.editThreshold.dayLeftWarn}" />
+					<h:outputText value="Due" />
+					<p:inputText style="width:50px;background:red"
+						value="#{scheduleManager.editThreshold.dayLeftDue}" />
+				</h:panelGrid>
+				<h:outputText value="Flight Hour Left" style="font-weight:bold" />
+				<h:panelGrid columns="6">
+					<h:outputText value="Info" />
+					<p:inputText style="width:50px;background:yellow"
+						value="#{scheduleManager.editThreshold.hourLeftInfo}" />
+					<h:outputText value="Warn" />
+					<p:inputText style="width:50px;background:orange"
+						value="#{scheduleManager.editThreshold.hourLeftWarn}" />
+					<h:outputText value="Due" />
+					<p:inputText style="width:50px;background:red"
+						value="#{scheduleManager.editThreshold.hourLeftDue}" />
+				</h:panelGrid>
+				<h:outputText value="Landing Cycle Left" style="font-weight:bold" />
+				<h:panelGrid columns="6">
+					<h:outputText value="Info" />
+					<p:inputText style="width:50px;background:yellow"
+						value="#{scheduleManager.editThreshold.landingCycleLeftInfo}" />
+					<h:outputText value="Warn" />
+					<p:inputText style="width:50px;background:orange"
+						value="#{scheduleManager.editThreshold.landingCycleLeftWarn}" />
+					<h:outputText value="Due" />
+					<p:inputText style="width:50px;background:red"
+						value="#{scheduleManager.editThreshold.landingCycleLeftDue}" />
+				</h:panelGrid>
+				<h:outputText value="Engine Cycle Left" style="font-weight:bold" />
+				<h:panelGrid columns="6">
+					<h:outputText value="Info" />
+					<p:inputText style="width:50px;background:yellow"
+						value="#{scheduleManager.editThreshold.engineCycleLeftInfo}" />
+					<h:outputText value="Warn" />
+					<p:inputText style="width:50px;background:orange"
+						value="#{scheduleManager.editThreshold.engineCycleLeftWarn}" />
+					<h:outputText value="Due" />
+					<p:inputText style="width:50px;background:red"
+						value="#{scheduleManager.editThreshold.engineCycleLeftDue}" />
+				</h:panelGrid>
+				<h:outputText value="Propeller Cycle Left" style="font-weight:bold" />
+				<h:panelGrid columns="6">
+					<h:outputText value="Info" />
+					<p:inputText style="width:50px;background:yellow"
+						value="#{scheduleManager.editThreshold.propellerCycleLeftInfo}" />
+					<h:outputText value="Warn" />
+					<p:inputText style="width:50px;background:orange"
+						value="#{scheduleManager.editThreshold.propellerCycleLeftWarn}" />
+					<h:outputText value="Due" />
+					<p:inputText style="width:50px;background:red"
+						value="#{scheduleManager.editThreshold.propellerCycleLeftDue}" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<p:separator />
+			<p:commandButton value="Save" icon="ui-icon-disk"
+				action="#{scheduleManager.saveThreshold}" update="scheduleList"
+				id="savebtn" />
+		</p:fieldset>
+	</p:fieldset>
+	<p:spacer height="20" />
+	<h:panelGroup id="inspectpanelgroup" style="float:left;width:100%">
+		<p:fieldset legend="Maintenance List" toggleable="true">
+			<h:panelGroup layout="block" id="scheduleList">
+				<p:dataTable value="#{scheduleManager.scheduleDataModelList}"
+					var="schedule" rows="15" paginator="true"
+					paginatorPosition="bottom" paginatorAlwaysVisible="false"
+					filteredValue="#{scheduleManager.filtered}"
+					widgetVar="scheduleWidget"
+					selection="#{scheduleManager.selectedBinding}"
+					rowKey="#{schedule.id}">
+					<f:facet name="footer">
+						<h:panelGroup layout="block" style="text-align:left">
+							<p:commandButton value="Create Work Card"
+								icon="ui-icon-circle-check"
+								action="#{scheduleManager.createJob()}"
+								oncomplete="workcardDialog.show()" update=":centerform:workcard"
+								disabled="#{scheduleManager.selectedAircraft == null}" />
+						</h:panelGroup>
+					</f:facet>
+					<p:column selectionMode="multiple" style="width:2%" />
+					<p:column headerText="Chapter" filterBy="#{schedule.chapter}"
+						filterMatchMode="exact"
+						filterOptions="#{scheduleManager.filterOptions}" style="width:20%">
+						<h:outputText value="#{schedule.chapter}" />
+					</p:column>
+					<p:column headerText="Inspection" filterMatchMode="contains"
+						filterBy="#{schedule.inspection.name}" style="width:20%">
+						<h:outputText value="#{schedule.inspection.name}" />
+					</p:column>
+					<p:column headerText="Inspection Type" style="width:10%"
+						filterBy="#{schedule.inspection.type.value}"
+						filterMatchMode="exact"
+						filterOptions="#{scheduleManager.inspectionTypeFilterOptions}">
+						<h:outputText value="#{schedule.inspection.type.value}" />
+					</p:column>
+					<p:column headerText="Device Name"
+						filterBy="#{schedule.deviceName}" filterMatchMode="exact"
+						filterOptions="#{scheduleManager.deviceNameFilterOptions}"
+						style="width:10%">
+						<h:outputText value="#{schedule.deviceName}" />
+					</p:column>
+					<p:column headerText="Device Type"
+						filterBy="#{schedule.deviceType.value}" filterMatchMode="exact"
+						filterOptions="#{scheduleManager.typeFilterOptions}"
+						style="width:10%">
+						<h:outputText value="#{schedule.deviceType.value}" />
+					</p:column>
+					<p:column sortBy="#{schedule.dayLeft}" headerText="Day Left"
+						style="width:5%;text-align:right;#{schedule.dayLeft le scheduleManager.editThreshold.dayLeftInfo ? 'background:yellow' : ''};#{schedule.dayLeft le scheduleManager.editThreshold.dayLeftWarn ? 'background:orange' : ''};#{schedule.dayLeft le scheduleManager.editThreshold.dayLeftDue ? 'background:red' : ''}">
+						<h:outputText value="#{schedule.dayLeft}"
+							rendered="#{schedule.dayLeft != 999999999}" />
+						<h:outputText value="N/A"
+							rendered="#{schedule.dayLeft == 999999999}" />
+					</p:column>
+					<p:column sortBy="#{schedule.hourLeft}" headerText="F/H Left"
+						style="width:5%;text-align:right;#{schedule.hourLeft le scheduleManager.editThreshold.hourLeftInfo ? 'background:yellow' : ''};#{schedule.hourLeft le scheduleManager.editThreshold.hourLeftWarn ? 'background:orange' : ''};#{schedule.hourLeft le scheduleManager.editThreshold.hourLeftDue ? 'background:red' : ''}">
+						<h:outputText value="#{schedule.hourLeft}"
+							rendered="#{schedule.hourLeft != 999999999}" />
+						<h:outputText value="N/A"
+							rendered="#{schedule.hourLeft == 999999999}" />
+					</p:column>
+					<p:column sortBy="#{schedule.landingCycleLeft}"
+						headerText="L/C Left"
+						style="width:5%;text-align:right;#{schedule.landingCycleLeft le scheduleManager.editThreshold.landingCycleLeftInfo ? 'background:yellow' : ''};#{schedule.landingCycleLeft le scheduleManager.editThreshold.landingCycleLeftWarn ? 'background:orange' : ''};#{schedule.landingCycleLeft le scheduleManager.editThreshold.landingCycleLeftDue ? 'background:red' : ''}">
+						<h:outputText value="#{schedule.landingCycleLeft}"
+							rendered="#{schedule.landingCycleLeft != 999999999}" />
+						<h:outputText value="N/A"
+							rendered="#{schedule.landingCycleLeft == 999999999}" />
+					</p:column>
+					<p:column sortBy="#{schedule.engineCycleLeft}"
+						headerText="E/C Left"
+						style="width:5%;text-align:right;#{schedule.engineCycleLeft le scheduleManager.editThreshold.engineCycleLeftInfo ? 'background:yellow' : ''};#{schedule.engineCycleLeft le scheduleManager.editThreshold.engineCycleLeftWarn ? 'background:orange' : ''};#{schedule.engineCycleLeft le scheduleManager.editThreshold.engineCycleLeftDue ? 'background:red' : ''}">
+						<h:outputText value="#{schedule.engineCycleLeft}"
+							rendered="#{schedule.engineCycleLeft != 999999999}" />
+						<h:outputText value="N/A"
+							rendered="#{schedule.engineCycleLeft == 999999999}" />
+					</p:column>
+					<p:column sortBy="#{schedule.propellerCycleLeft}"
+						headerText="P/C Left"
+						style="width:5%;text-align:right;#{schedule.propellerCycleLeft le scheduleManager.editThreshold.propellerCycleLeftInfo ? 'background:yellow' : ''};#{schedule.propellerCycleLeft le scheduleManager.editThreshold.propellerCycleLeftWarn ? 'background:orange' : ''};#{schedule.propellerCycleLeft le scheduleManager.editThreshold.propellerCycleLeftDue ? 'background:red' : ''}">
+						<h:outputText value="#{schedule.propellerCycleLeft}"
+							rendered="#{schedule.propellerCycleLeft != 999999999}" />
+						<h:outputText value="N/A"
+							rendered="#{schedule.propellerCycleLeft == 999999999}" />
+					</p:column>
+					<!-- <p:column style="text-align:center">
+					<p:commandButton icon="ui-icon-wrench"
+						action="#{scheduleManager.createJob}"
+						oncomplete="workcardDialog.show()" update=":centerform:workcard"
+						style="width:16px;height:16px">
+						<f:setPropertyActionListener
+							target="#{scheduleManager.selectedSchedule}" value="#{schedule}" />
+					</p:commandButton>
+				</p:column>-->
+				</p:dataTable>
+			</h:panelGroup>
+		</p:fieldset>
+	</h:panelGroup>
+	<p:dialog header="Workcard" widgetVar="workcardDialog"
+		resizable="false" showEffect="clip" id="workcard" hideEffect="clip">
+		<h:panelGroup layout="block" id="workcardcontainer">
+			<p:panelGrid styleClass="panelgridPadding">
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputText value="Card Number" style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:inputText value="#{scheduleManager.editWorkcard.number}"
+							size="30"
+							styleClass="ui-inputfield ui-inputtext ui-widget ui-state-default ui-corner-all" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputText value="Job Number" style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:inputText value="#{scheduleManager.editWorkcard.jobNumber}"
+							size="30"
+							styleClass="ui-inputfield ui-inputtext ui-widget ui-state-default ui-corner-all" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputText value="Create Date" style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<p:calendar value="#{scheduleManager.editWorkcard.createDate}"
+							pattern="dd/MM/yyyy" size="30" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputText value="Maintenance Type" style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{scheduleManager.editWorkcard.maintenanceType.value}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputText value="Aircraft"
+							rendered="#{scheduleManager.editWorkcard.aircraft != null}"
+							style="font-weight:bold" />
+						<h:outputText value="Engine"
+							rendered="#{scheduleManager.editWorkcard.engine != null}"
+							style="font-weight:bold" />
+						<h:outputText value="Propeller"
+							rendered="#{scheduleManager.editWorkcard.propeller != null}"
+							style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{scheduleManager.editWorkcard.aircraft.register}"
+							rendered="#{scheduleManager.editWorkcard.aircraft != null}" />
+						<h:outputText value="#{scheduleManager.editWorkcard.engine}"
+							rendered="#{scheduleManager.editWorkcard.engine != null}" />
+						<h:outputText value="#{scheduleManager.editWorkcard.propeller}"
+							rendered="#{scheduleManager.editWorkcard.propeller != null}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputText value="Flight Hours" style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{scheduleManager.editWorkcard.flightHour}" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<p:dataTable
+				value="#{scheduleManager.editWorkcard.cardInspectionsList}"
+				var="binding">
+				<f:facet name="header">
+					<h:outputText value="Inspection" />
+				</f:facet>
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column headerText="Part Name" />
+						<p:column headerText="Part Number" />
+						<p:column headerText="Serial Number" />
+						<p:column headerText="Supersede #1" />
+						<p:column headerText="Supersede #2" />
+						<p:column headerText="Supersede #3" />
+					</p:row>
+				</p:columnGroup>
+				<p:subTable value="#{binding.binding.inspection.partAsList}"
+					var="parts">
+					<f:facet name="header">
+						<div>
+							<h:outputText value="Name: " />
+							<h:outputText value="#{binding.binding.inspection.name}" />
+						</div>
+						<div style="margin-top: 4px">
+							<h:outputText value="Type: " />
+							<h:outputText value="#{binding.binding.inspection.type.value}" />
+						</div>
+					</f:facet>
+					<p:column>
+						<h:outputText value="#{parts.name}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{parts.number}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{parts.serialName}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{parts.supersede1}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{parts.supersede2}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{parts.supersede3}" />
+					</p:column>
+				</p:subTable>
+			</p:dataTable>
+			<p:separator />
+			<p:commandButton value="Save" icon="ui-icon-disk"
+				action="#{scheduleManager.createWorkCard()}" id="createbtn"
+				oncomplete="workcardDialog.hide()" />
+		</h:panelGroup>
+	</p:dialog>
+</body>
+</html>

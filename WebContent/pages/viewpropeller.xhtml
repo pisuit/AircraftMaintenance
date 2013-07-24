@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<style type="text/css">
+.panelgridPadding tr,.panelgridPadding td {
+	border: none;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-right: 5px;
+	padding-left: 5px;
+	padding-top: 5px;
+}
+</style>
+</h:head>
+<body>
+	<p:blockUI trigger="selectpropeller" block="mainpanelgroup">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<h3 style="margin-top: 0;" class="ui-widget-header ui-corner-all">
+		<h:outputText value="View Propeller" />
+	</h3>
+	<h:panelGrid columns="2">
+		<h:outputText value="Propeller: " />
+		<p:selectOneMenu value="#{viewPropellerManager.propellerID}"
+			id="selectpropeller" style="width:250px">
+			<f:selectItems
+				value="#{viewPropellerManager.propellerSelectItemList}" />
+			<p:ajax listener="#{viewPropellerManager.propellerSelected}"
+				update="basicfieldset, statusfieldset" />
+		</p:selectOneMenu>
+	</h:panelGrid>
+	<p:spacer height="10" />
+	<h:panelGroup id="mainpanelgroup" style="float:left;width:100%">
+		<p:fieldset legend="Basic Data" toggleable="true" id="basicfieldset">
+			<p:panelGrid styleClass="panelgridPadding">
+				<p:row>
+					<p:column style="text-align:right;width:200px;">
+						<h:outputLabel value="Name: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewPropellerManager.selectedPropeller.name}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Number: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewPropellerManager.selectedPropeller.number}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Model: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewPropellerManager.selectedPropeller.model}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Serial Number: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewPropellerManager.selectedPropeller.serialNumber}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Manufacture Year: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewPropellerManager.selectedPropeller.manufacYear}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Manufacture Plant: "
+							style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewPropellerManager.selectedPropeller.manufacPlant}" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:fieldset>
+		<p:spacer height="20" />
+		<p:fieldset legend="Status" toggleable="true" id="statusfieldset">
+			<p:panelGrid styleClass="panelgridPadding">
+				<p:row>
+					<p:column style="text-align:right;width:200px">
+						<h:outputLabel value="Status: " />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewPropellerManager.selectedPropeller.status.value}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Current Attached: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewPropellerManager.attachedAircraft.register}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Propeller Cycles: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewPropellerManager.selectedPropeller.currentPropellerCycle}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Flight Hours: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewPropellerManager.selectedPropeller.currentFlightHour}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Remaining Propeller Cycles: "
+							style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText value="" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Remaining Flight Hours: "
+							style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText value="" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Remaining Time: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText value="" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:fieldset>
+		<p:spacer height="20" />
+		<p:fieldset legend="Maintenance History" toggleable="true">
+			<p:dataTable>
+
+			</p:dataTable>
+		</p:fieldset>
+	</h:panelGroup>
+</body>
+</html>

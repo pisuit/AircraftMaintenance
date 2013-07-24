@@ -1,0 +1,264 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head></h:head>
+<body>
+	<h3 style="margin-top: 0;" class="ui-widget-header ui-corner-all">
+		<h:outputText value="Manage Journey Log" />
+	</h3>
+	<p:fieldset legend="Journey Log List" toggleable="true"
+		id="journeylist">
+		<p:dataTable>
+
+		</p:dataTable>
+	</p:fieldset>
+	<p:spacer height="20" />
+	<p:fieldset legend="Create Journey Log" toggleable="true"
+		id="inputjourney">
+		<h:panelGroup layout="block" id="inputcontainer">
+			<h:panelGrid columns="2" styleClass="verticaltop">
+				<h:panelGrid columns="1">
+					<h:outputText value="Aircraft" style="font-weight:bold" />
+					<p:selectOneMenu value="#{journeyLogManager.aircraftID}"
+						style="width:250px;margin-bottom:6px">
+						<f:selectItems value="#{journeyLogManager.aircraftSelectItemList}" />
+						<p:ajax listener="#{journeyLogManager.aircraftSelected()}"
+							update="timegrid" />
+					</p:selectOneMenu>
+					<h:outputText value="Nature of Flight" style="font-weight:bold" />
+					<p:inputText
+						value="#{journeyLogManager.editJourneyLog.natureOfFlight}"
+						size="50" style="margin-bottom:6px" />
+					<h:outputText value="Captain" style="font-weight:bold" />
+					<p:inputText value="#{journeyLogManager.editJourneyLog.captain}"
+						size="50" style="margin-bottom:6px" />
+					<h:outputText value="Co-Pilot" style="font-weight:bold" />
+					<p:inputText value="#{journeyLogManager.editJourneyLog.coPilot}"
+						size="50" style="margin-bottom:6px" />
+					<h:outputText value="Flight Engineer" style="font-weight:bold" />
+					<p:inputText
+						value="#{journeyLogManager.editJourneyLog.flightEngineer}"
+						size="50" style="margin-bottom:6px" />
+					<h:outputText value="Panel Operator" style="font-weight:bold" />
+					<p:inputText
+						value="#{journeyLogManager.editJourneyLog.panelOperator}"
+						size="50" style="margin-bottom:6px" />
+					<h:outputText value="Observer" style="font-weight:bold" />
+					<p:inputText value="#{journeyLogManager.editJourneyLog.observer}"
+						size="50" style="margin-bottom:6px" />
+				</h:panelGrid>
+				<p:panelGrid id="timegrid" styleClass="verticalmiddle"
+					style="margin-left:100px">
+					<p:row>
+						<p:column rowspan="2" style="text-align:center">
+							<h:outputText value="TIME" style="font-weight:bold" />
+						</p:column>
+						<p:column rowspan="2" style="text-align:center">
+							<h:outputText value="AIRFRAME" style="font-weight:bold" />
+						</p:column>
+						<p:column rowspan="2" style="text-align:center">
+							<h:outputText value="LH. ENG." style="font-weight:bold" />
+						</p:column>
+						<p:column rowspan="2" style="text-align:center">
+							<h:outputText value="RH. ENG." style="font-weight:bold" />
+						</p:column>
+						<p:column rowspan="2" style="text-align:center">
+							<h:outputText value="LH. PROP." style="font-weight:bold" />
+						</p:column>
+						<p:column rowspan="2" style="text-align:center">
+							<h:outputText value="RH. PROP." style="font-weight:bold" />
+						</p:column>
+						<p:column rowspan="2" style="text-align:center">
+							<h:outputText value="LANDING"
+								style="font-weight:bold;dispaly:block" />
+							<h:outputText value="CYCLES"
+								style="font-weight:bold;display:block" />
+						</p:column>
+						<p:column colspan="2" style="text-align:center">
+							<h:outputText value="ENGINE CYCLES" style="font-weight:bold" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column style="text-align:center">
+							<h:outputText value="LH" style="font-weight:bold" />
+						</p:column>
+						<p:column style="text-align:center">
+							<h:outputText value="RH" style="font-weight:bold" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column style="text-align:center">
+							<h:outputText value="LAST TRIP" style="font-weight:bold" />
+						</p:column>
+						<p:column style="text-align:right">
+							<h:outputText
+								value="#{journeyLogManager.editJourneyLog.airframeLastTime}" />
+						</p:column>
+						<p:column style="text-align:right">
+							<h:outputText
+								value="#{journeyLogManager.editJourneyLog.leftEngineLastTime}" />
+						</p:column>
+						<p:column style="text-align:right">
+							<h:outputText
+								value="#{journeyLogManager.editJourneyLog.rightEngineLastTime}" />
+						</p:column>
+						<p:column style="text-align:right">
+							<h:outputText
+								value="#{journeyLogManager.editJourneyLog.leftPropellerLastTime}" />
+						</p:column>
+						<p:column style="text-align:right">
+							<h:outputText
+								value="#{journeyLogManager.editJourneyLog.rightPropellerLastTime}" />
+						</p:column>
+						<p:column style="text-align:right">
+							<h:outputText
+								value="#{journeyLogManager.editJourneyLog.landingCycleLastTime}" />
+						</p:column>
+						<p:column style="text-align:right">
+							<h:outputText
+								value="#{journeyLogManager.editJourneyLog.leftEngineCycleLastTime}" />
+						</p:column>
+						<p:column style="text-align:right">
+							<h:outputText
+								value="#{journeyLogManager.editJourneyLog.rightEngineCycleLastTime}" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column style="text-align:center">
+							<h:outputText value="ARBN. TIME" style="font-weight:bold" />
+						</p:column>
+						<p:column style="text-align:center">
+							<p:inputText size="10"
+								value="#{journeyLogManager.editJourneyLog.newAirframeTime}"
+								style="text-align:right" />
+						</p:column>
+						<p:column style="text-align:center">
+							<p:inputText size="10"
+								value="#{journeyLogManager.editJourneyLog.newLeftEngineTime}"
+								style="text-align:right" />
+						</p:column>
+						<p:column style="text-align:center">
+							<p:inputText size="10"
+								value="#{journeyLogManager.editJourneyLog.newRightEngineTime}"
+								style="text-align:right" />
+						</p:column>
+						<p:column style="text-align:center">
+							<p:inputText size="10"
+								value="#{journeyLogManager.editJourneyLog.newLeftPropellerTime}"
+								style="text-align:right" />
+						</p:column>
+						<p:column style="text-align:center">
+							<p:inputText size="10"
+								value="#{journeyLogManager.editJourneyLog.newRightPropellerTime}"
+								style="text-align:right" />
+						</p:column>
+						<p:column style="text-align:center">
+							<p:inputText size="10"
+								value="#{journeyLogManager.editJourneyLog.newLandingCycles}"
+								style="text-align:right" />
+						</p:column>
+						<p:column style="text-align:center">
+							<p:inputText size="10"
+								value="#{journeyLogManager.editJourneyLog.newLeftEngineCycles}"
+								style="text-align:right" />
+						</p:column>
+						<p:column style="text-align:center">
+							<p:inputText size="10"
+								value="#{journeyLogManager.editJourneyLog.newRightEngineCycles}"
+								style="text-align:right" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column style="text-align:center">
+							<h:outputText value="TOTAL TIME" style="font-weight:bold" />
+						</p:column>
+						<p:column style="text-align:right">
+							<h:outputText
+								value="#{journeyLogManager.editJourneyLog.airframeTotalTime}" />
+						</p:column>
+						<p:column style="text-align:right">
+							<h:outputText
+								value="#{journeyLogManager.editJourneyLog.leftEngineTotalTime}" />
+						</p:column>
+						<p:column style="text-align:right">
+							<h:outputText
+								value="#{journeyLogManager.editJourneyLog.rightEngineTotalTime}" />
+						</p:column>
+						<p:column style="text-align:right">
+							<h:outputText
+								value="#{journeyLogManager.editJourneyLog.leftPropellerTotalTime}" />
+						</p:column>
+						<p:column style="text-align:right">
+							<h:outputText
+								value="#{journeyLogManager.editJourneyLog.rightPropellerTotalTime}" />
+						</p:column>
+						<p:column style="text-align:right">
+							<h:outputText
+								value="#{journeyLogManager.editJourneyLog.landingCycleTotalTime}" />
+						</p:column>
+						<p:column style="text-align:right">
+							<h:outputText
+								value="#{journeyLogManager.editJourneyLog.leftEngineCycleTotalTime}" />
+						</p:column>
+						<p:column style="text-align:right">
+							<h:outputText
+								value="#{journeyLogManager.editJourneyLog.rightEngineCycleTotalTime}" />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+			</h:panelGrid>
+			<p:dataTable value="#{journeyLogManager.journeyTripList}" rows="5"
+				paginator="true" paginatorAlwaysVisible="false"
+				paginatorPosition="bottom" editable="true" editMode="cell"
+				var="trip">
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column headerText="LEG." rowspan="2" />
+						<p:column headerText="FROM" rowspan="2" />
+						<p:column headerText="TO" rowspan="2" />
+						<p:column headerText="START" rowspan="2" />
+						<p:column headerText="T/O" rowspan="2" />
+						<p:column headerText="L/D" rowspan="2" />
+						<p:column headerText="STOP" rowspan="2" />
+						<p:column headerText="ARBN." rowspan="2" />
+						<p:column headerText="BLOCK" rowspan="2" />
+						<p:column headerText="L/D" rowspan="2" />
+						<p:column headerText="ENGINE CYCLE" colspan="2" />
+						<p:column headerText="FUEL" colspan="2" />
+					</p:row>
+					<p:row>
+						<p:column headerText="LH" />
+						<p:column headerText="RH" />
+						<p:column headerText="ADDED" />
+						<p:column headerText="T/O" />
+					</p:row>
+				</p:columnGroup>
+				<p:column>
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{trip.order}" />
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{trip.order}" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+				<p:column>
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{trip.from}" />
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{trip.from}" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+			</p:dataTable>
+		</h:panelGroup>
+	</p:fieldset>
+</body>
+</html>

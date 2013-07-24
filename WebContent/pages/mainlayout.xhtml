@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<style type="text/css">
+/*.ui-datatable-odd {
+	background: none repeat scroll 0 0 #F2F5F9 !important;
+}*/
+
+.table-hilight .ui-datatable-odd:hover, .table-hilight .ui-datatable-even:hover {
+	background-color: #d5dee0 !important;
+}
+
+.ui-datatable th,.ui-datatable tfoot td {
+	margin: 0;
+	overflow: hidden;
+	padding: 4px 10px;
+	text-align: center !important;
+	white-space: nowrap;
+}
+
+.panelgridPadding tr,.panelgridPadding td {
+	border: none;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-right: 5px;
+	padding-left: 5px;
+	padding-top: 5px;
+}
+
+.ui-selectonemenu-panel .ui-selectonemenu-filter {
+	width: 210px;
+}
+
+.verticaltop td {
+	vertical-align: top;
+}
+
+.verticalmiddle td {
+	vertical-align: middle;
+}
+</style>
+
+</h:head>
+<body>
+	<p:growl id="growl" showDetail="true" />
+	<p:blockUI widgetVar="blockWholePage" block=":center">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<h:outputStylesheet library="css" name="global.css" />
+	<p:layout fullPage="true">
+		<p:layoutUnit position="north" id="top" size="82">
+			<h:form>
+				<div class="ui-widget ui-widget-header">
+					<div id="logo" style="z-index: -100">
+						<h1>Aircraft Maintenance System</h1>
+					</div>
+				</div>
+			</h:form>
+		</p:layoutUnit>
+		<p:layoutUnit position="south" id="bottom" size="31"
+			style="text-align:center">
+			<h:outputText value="© Copyrights reserved 2012. Developed by ID.IT"
+				style="font-weight:bold" />
+			<!--			<h3 style="margin-top: 0;background:#68727B" class="ui-widget-header ui-corner-all">-->
+			<!--				<h:outputText value="© Copyrights reserved 2012. Developed by IT.OP. มีปัญหาการใช้งานกรุณาติดต่อ สท.กญ. โทร.8214" />-->
+			<!--			</h3>-->
+		</p:layoutUnit>
+		<p:layoutUnit position="center" id="center" resizable="true">
+			<h:form id="centerform">
+				<h:panelGroup id="centerContentPanel">
+					<ui:include src="#{navigationManager.targetPage}.xhtml" />
+				</h:panelGroup>
+			</h:form>
+		</p:layoutUnit>
+		<p:layoutUnit position="west" id="left" size="230" header="Menu"
+			collapsible="false">
+			<p:accordionPanel activeIndex="#{navigationManager.activeTab}">
+				<p:ajax event="tabChange" listener="#{navigationManager.test()}" />
+				<p:tab title="Aircraft Data" id="tab1">
+					<h:form>
+						<p:menu style="width:100%">
+							<p:submenu label="Aircraft">
+								<p:menuitem value="Create/Edit Aircraft"
+									action="#{navigationManager.setTargetPage('createaircraft')}"
+									update=":centerform:centerContentPanel"
+									icon="ui-icon ui-icon-plus" onstart="blockWholePage.show()"
+									oncomplete="blockWholePage.hide()" />
+								<p:menuitem value="View Aircraft"
+									action="#{navigationManager.setTargetPage('viewaircraft')}"
+									update=":centerform:centerContentPanel"
+									icon="ui-icon ui-icon-search" onstart="blockWholePage.show()"
+									oncomplete="blockWholePage.hide()" />
+							</p:submenu>
+							<p:submenu label="Engine">
+								<p:menuitem value="Create/Edit Engine"
+									action="#{navigationManager.setTargetPage('createengine')}"
+									update=":centerform:centerContentPanel"
+									icon="ui-icon ui-icon-plus" onstart="blockWholePage.show()"
+									oncomplete="blockWholePage.hide()" />
+								<p:menuitem value="View Engine"
+									action="#{navigationManager.setTargetPage('viewengine')}"
+									update=":centerform:centerContentPanel"
+									icon="ui-icon ui-icon-search" onstart="blockWholePage.show()"
+									oncomplete="blockWholePage.hide()" />
+							</p:submenu>
+							<p:submenu label="Propeller">
+								<p:menuitem value="Create/Edit Propeller"
+									action="#{navigationManager.setTargetPage('createpropeller')}"
+									update=":centerform:centerContentPanel"
+									icon="ui-icon ui-icon-plus" onstart="blockWholePage.show()"
+									oncomplete="blockWholePage.hide()" />
+								<p:menuitem value="View Propeller"
+									action="#{navigationManager.setTargetPage('viewpropeller')}"
+									update=":centerform:centerContentPanel"
+									icon="ui-icon ui-icon-search" onstart="blockWholePage.show()"
+									oncomplete="blockWholePage.hide()" />
+							</p:submenu>
+						</p:menu>
+					</h:form>
+				</p:tab>
+				<p:tab title="Chapter / Inspection" id="tab2">
+					<h:form>
+						<p:menu style="width:100%">
+							<p:submenu label="Chapter">
+								<p:menuitem value="Create/Edit Chapter"
+									action="#{navigationManager.setTargetPage('createchapter')}"
+									update=":centerform:centerContentPanel"
+									icon="ui-icon ui-icon-plus" onstart="blockWholePage.show()"
+									oncomplete="blockWholePage.hide()" />
+							</p:submenu>
+							<p:submenu label="Inspection">
+								<p:menuitem value="Create/Edit Inspection"
+									action="#{navigationManager.setTargetPage('createinspection')}"
+									update=":centerform:centerContentPanel"
+									icon="ui-icon ui-icon-plus" onstart="blockWholePage.show()"
+									oncomplete="blockWholePage.hide()" />
+								<p:menuitem value="Bind Inspection"
+									action="#{navigationManager.setTargetPage('bindchapter')}"
+									update=":centerform:centerContentPanel" icon="ui-icon-link"
+									onstart="blockWholePage.show()"
+									oncomplete="blockWholePage.hide()" />
+							</p:submenu>
+						</p:menu>
+					</h:form>
+				</p:tab>
+				<p:tab title="Spare Part" id="tab3">
+					<h:form>
+						<p:menu style="width:100%">
+							<p:submenu label="Spare Parts">
+								<p:menuitem value="Create/Edit Spare Parts"
+									action="#{navigationManager.setTargetPage('createspareparts')}"
+									update=":centerform:centerContentPanel"
+									icon="ui-icon ui-icon-plus" onstart="blockWholePage.show()"
+									oncomplete="blockWholePage.hide()" />
+							</p:submenu>
+						</p:menu>
+					</h:form>
+				</p:tab>
+				<p:tab title="Maintenance" id="tab4">
+					<h:form>
+						<p:menu style="width:100%">
+							<p:submenu label="Schedule">
+								<!-- <p:menuitem value="Maintenance Calendar"
+									action="#{navigationManager.setTargetPage('calendar')}"
+									update=":centerform:centerContentPanel"
+									icon="ui-icon ui-icon-search" onstart="blockWholePage.show()"
+									oncomplete="blockWholePage.hide()" /> -->
+								<p:menuitem value="Maintenance Schedule"
+									action="#{navigationManager.setTargetPage('schedule')}"
+									update=":centerform:centerContentPanel"
+									icon="ui-icon ui-icon-search" onstart="blockWholePage.show()"
+									oncomplete="blockWholePage.hide()" />
+							</p:submenu>
+							<p:submenu label="Work Card">
+								<p:menuitem value="Manage Work Card"
+									update=":centerform:centerContentPanel"
+									onstart="blockWholePage.show()"
+									oncomplete="blockWholePage.hide()" icon="ui-icon-document"
+									action="#{navigationManager.setTargetPage('workcard')}" />
+							</p:submenu>
+							<p:submenu label="Journey Log">
+								<p:menuitem value="Manage Journey Log"
+									update=":centerform:centerContentPanel"
+									onstart="blockWholePage.show()"
+									oncomplete="blockWholePage.hide()" icon="ui-icon-document"
+									action="#{navigationManager.setTargetPage('journeylog')}" />
+							</p:submenu>
+						</p:menu>
+					</h:form>
+				</p:tab>
+				<p:tab title="Admin" id="tab5">
+					<h:form>
+						<p:menu style="width:100%">
+
+						</p:menu>
+					</h:form>
+				</p:tab>
+			</p:accordionPanel>
+		</p:layoutUnit>
+		<!--		<p:layoutUnit position="east" id="right" size="180"-->
+		<!--			header="Notification" collapsible="true">-->
+		<!--			<h:form id="rightform">-->
+		<!---->
+		<!--			</h:form>-->
+		<!--		</p:layoutUnit>-->
+	</p:layout>
+</body>
+</html>

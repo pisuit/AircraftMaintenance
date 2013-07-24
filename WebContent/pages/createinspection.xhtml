@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<script type="text/javascript">
+	function showDeleteDialog(){
+		deleteInspectionConfirm.show(); 
+    document.getElementById("center").style.zIndex= "";
+}
+	</script>
+	<style type="text/css">
+.ui-selectonemenu-panel .ui-selectonemenu-filter {
+	width: 210px;
+}
+</style>
+</h:head>
+<body>
+	<p:blockUI trigger="savebtn" block="inputpanelgroup">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI trigger="clearbtn" block="inputpanelgroup">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI widgetVar="blockInputUI" block="inputpanelgroup">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI widgetVar="blockListUI" block="listfieldset">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<h3 style="margin-top: 0;" class="ui-widget-header ui-corner-all">
+		<h:outputText value="Create/Edit Inspection" />
+	</h3>
+	<p:fieldset legend="Inspection List" toggleable="true"
+		id="listfieldset">
+		<p:dataTable value="#{inspectionManager.inspectionList}"
+			var="inspection" id="inspectionListTable" rows="10" paginator="true"
+			paginatorPosition="bottom" paginatorAlwaysVisible="false"
+			filteredValue="#{inspectionManager.filtered}"
+			widgetVar="inspectionWidget" styleClass="table-hilight">
+			<p:column headerText="Name" filterBy="#{inspection.name}"
+				filterMatchMode="contains" style="width:25%">
+				<h:outputText value="#{inspection.name}" />
+			</p:column>
+			<p:column headerText="Chapter" filterBy="#{inspection.chapter}"
+				filterMatchMode="exact"
+				filterOptions="#{inspectionManager.filterOptions}" style="width:25%">
+				<h:outputText value="#{inspection.chapter}" />
+			</p:column>
+			<p:column headerText="Type" filterBy="#{inspection.type.value}"
+				filterMatchMode="exact"
+				filterOptions="#{inspectionManager.typeFilterOptions}"
+				style="width:5%">
+				<h:outputText value="#{inspection.type.value}" />
+			</p:column>
+			<p:column headerText="Ltd L/C" style="text-align:right;width:5%">
+				<h:outputText value="#{inspection.limitedLandingCycle}"
+					rendered="#{inspection.limitedLandingCycle != 0}" />
+				<h:outputText value="N/A"
+					rendered="#{inspection.limitedLandingCycle == 0}" />
+			</p:column>
+			<p:column headerText="Ltd E/C" style="text-align:right;width:5%">
+				<h:outputText value="#{inspection.limitedEngineCycle}"
+					rendered="#{inspection.limitedEngineCycle != 0}" />
+				<h:outputText value="N/A"
+					rendered="#{inspection.limitedEngineCycle == 0}" />
+			</p:column>
+			<p:column headerText="Ltd P/C" style="text-align:right;width:5%">
+				<h:outputText value="#{inspection.limitedPropellerCycle}"
+					rendered="#{inspection.limitedPropellerCycle != 0}" />
+				<h:outputText value="N/A"
+					rendered="#{inspection.limitedPropellerCycle == 0}" />
+			</p:column>
+			<p:column headerText="Ltd F/H" style="text-align:right;width:5%">
+				<h:outputText value="#{inspection.limitedFlightHour}"
+					rendered="#{inspection.limitedFlightHour != 0}" />
+				<h:outputText value="N/A"
+					rendered="#{inspection.limitedFlightHour == 0}" />
+			</p:column>
+			<p:column headerText="Ltd Day" style="text-align:right;width:5%">
+				<h:outputText value="#{inspection.limitedTime}"
+					rendered="#{inspection.limitedTime != 0}" />
+				<h:outputText value="N/A" rendered="#{inspection.limitedTime == 0}" />
+			</p:column>
+			<p:column style="text-align:center">
+				<p:commandButton icon="ui-icon-pencil"
+					action="#{inspectionManager.setSelectedInspection}"
+					update=":centerform:inspectioninputfieldset" title="Edit"
+					onstart="blockInputUI.show()" oncomplete="blockInputUI.hide()"
+					style="width:16px;height:16px">
+					<f:setPropertyActionListener
+						target="#{inspectionManager.editInspection}" value="#{inspection}" />
+				</p:commandButton>
+				<p:commandButton icon="ui-icon-trash" onclick="showDeleteDialog()"
+					style="margin-left:5px;width:16px;height:16px" title="Delete">
+					<f:setPropertyActionListener
+						target="#{inspectionManager.deletedInspection}"
+						value="#{inspection}" />
+				</p:commandButton>
+			</p:column>
+		</p:dataTable>
+	</p:fieldset>
+	<p:spacer height="20" />
+	<h:panelGroup id="inputpanelgroup" style="float:left;width:100%">
+		<p:fieldset legend="#{inspectionManager.inputFieldsetLegend}"
+			toggleable="true" id="inspectioninputfieldset">
+			<h:panelGrid columns="1">
+				<h:outputLabel value="Chapter" style="font-weight:bold" />
+				<h:panelGroup layout="block" style="margin-bottom:6px">
+					<p:selectOneMenu value="#{inspectionManager.chapterID}"
+						filter="true" filterMatchMode="contains" style="width:250px">
+						<f:selectItems value="#{inspectionManager.chapterSelectItemList}" />
+						<p:ajax listener="#{inspectionManager.chapterSelected}" />
+					</p:selectOneMenu>
+					<p:selectBooleanCheckbox value="#{inspectionManager.chapterLocked}"
+						style="margin-left:10px" />
+					<h:outputLabel value="Lock" style="margin-left:3px" />
+				</h:panelGroup>
+				<h:outputText value="" />
+				<h:outputText value="Type" style="font-weight:bold" />
+				<p:selectOneMenu value="#{inspectionManager.selectedInspectionType}"
+					style="width:250px;margin-bottom:6px">
+					<f:selectItems
+						value="#{inspectionManager.inspectionTypeSelectItemList}" />
+					<p:ajax listener="#{inspectionManager.inspectionTypeSelected}" />
+				</p:selectOneMenu>
+				<h:outputText value="" />
+				<h:outputLabel value="Name" style="font-weight:bold" />
+				<p:inputText value="#{inspectionManager.editInspection.name}"
+					size="50" style="margin-bottom:6px" />
+				<h:outputText value="" />
+				<h:outputLabel value="Limited Landing Cycle"
+					style="font-weight:bold" />
+				<p:inputText
+					value="#{inspectionManager.editInspection.limitedLandingCycle}"
+					size="50" style="margin-bottom:6px" />
+				<h:outputText value="" />
+				<h:outputLabel value="Limited Engine Cycle" style="font-weight:bold" />
+				<p:inputText
+					value="#{inspectionManager.editInspection.limitedEngineCycle}"
+					size="50" style="margin-bottom:6px" />
+				<h:outputText value="" />
+				<h:outputLabel value="Limited Propeller Cycle"
+					style="font-weight:bold" />
+				<p:inputText
+					value="#{inspectionManager.editInspection.limitedPropellerCycle}"
+					size="50" style="margin-bottom:6px" />
+				<h:outputText value="" />
+				<h:outputLabel value="Limited Flight Hour" style="font-weight:bold" />
+				<p:inputText
+					value="#{inspectionManager.editInspection.limitedFlightHour}"
+					size="50" style="margin-bottom:6px" />
+				<h:outputText value="" />
+				<h:outputLabel value="Limited Day (Month)" style="font-weight:bold" />
+				<p:inputText value="#{inspectionManager.editInspection.limitedTime}"
+					size="50" style="margin-bottom:6px"/>
+				<!--  <p:selectOneRadio value="#{inspectionManager.dayType}"
+					layout="inline">
+					<f:selectItem itemLabel="Month" itemValue="m" />
+					<f:selectItem itemLabel="Year" itemValue="y" />
+				</p:selectOneRadio> -->
+			</h:panelGrid>
+			<p:separator />
+			<h:panelGrid columns="2">
+				<p:commandButton value="Save" icon="ui-icon-disk"
+					action="#{inspectionManager.saveInspection}"
+					update="inspectionListTable, inspectioninputfieldset, :growl"
+					id="savebtn" oncomplete="inspectionWidget.filter()" />
+				<p:commandButton value="Clear" icon="ui-icon-refresh"
+					action="#{inspectionManager.clearData}"
+					update="inspectioninputfieldset" id="clearbtn" />
+			</h:panelGrid>
+		</p:fieldset>
+	</h:panelGroup>
+	<p:confirmDialog
+		message="This inspection will be deleted, do you want to proceed ?"
+		header="Delete Inspection" severity="alert"
+		widgetVar="deleteInspectionConfirm">
+		<p:commandButton value="Yes"
+			oncomplete="deleteInspectionConfirm.hide();blockListUI.hide();inspectionWidget.filter()"
+			action="#{inspectionManager.deleteInspection}"
+			update="inspectionListTable, :centerform:inspectioninputfieldset, :growl"
+			onstart="blockListUI.show()" />
+		<p:commandButton value="No" onclick="deleteInspectionConfirm.hide()" />
+	</p:confirmDialog>
+</body>
+</html>

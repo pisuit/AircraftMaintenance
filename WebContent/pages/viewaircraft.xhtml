@@ -1,0 +1,650 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<style type="text/css">
+.panelgridPadding tr,.panelgridPadding td {
+	border: none;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-right: 5px;
+	padding-left: 5px;
+	padding-top: 5px;
+}
+</style>
+</h:head>
+<body>
+	<p:blockUI trigger="selectaircraft" block="mainpanelgroup">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<h3 style="margin-top: 0;" class="ui-widget-header ui-corner-all">
+		<h:outputText value="View Aircraft" />
+	</h3>
+	<h:panelGrid columns="2">
+		<h:outputText value="Aircraft: " />
+		<p:selectOneMenu value="#{viewAircraftManager.aircraftID}"
+			id="selectaircraft" style="width:250px">
+			<f:selectItems value="#{viewAircraftManager.aircraftSelectItemList}" />
+			<p:ajax listener="#{viewAircraftManager.aircraftSelected}"
+				update="basicfieldset, statusfiedset, attachfieldset, historyfieldset" />
+		</p:selectOneMenu>
+	</h:panelGrid>
+	<p:spacer height="10" />
+	<h:panelGroup id="mainpanelgroup" style="float:left;width:100%">
+		<p:fieldset legend="Basic Data" toggleable="true" id="basicfieldset">
+			<p:panelGrid styleClass="panelgridPadding">
+				<p:row>
+					<p:column style="text-align:right;width:200px">
+						<h:outputLabel value="Name: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{viewAircraftManager.selectedAircraft.name}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Register: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.register}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Serial Number: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.serialNumber}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Number of Seat: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.numberOfSeat}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Manufacture Year: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.manufacYear}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Manufacture Plant: "
+							style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.manufacPlant}" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:fieldset>
+		<p:spacer height="20" />
+		<p:fieldset legend="Status" toggleable="true" id="statusfiedset">
+			<p:panelGrid styleClass="panelgridPadding">
+				<p:row>
+					<p:column style="text-align:right;width:200px">
+						<h:outputLabel value="Status: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.status.value}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Current Location: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.currentLocation}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Flight Hours: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.currentFlightHour}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Landing Cycles: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.currentLandingCycle}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Remaining Flight Hours: "
+							style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText value="" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Remaining Landing Cycles: "
+							style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText value="" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Remaining Time: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText value="" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:fieldset>
+		<p:spacer height="20" />
+		<p:fieldset legend="Attachment" toggleable="true" id="attachfieldset">
+			<p:panelGrid styleClass="panelgridPadding">
+				<p:row>
+					<p:column style="text-align:right;width:200px">
+						<h:outputLabel value="Engine One: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.engineOne}" />
+					</p:column>
+					<p:column>
+						<p:commandLink style="margin-left:20px"
+							styleClass="ui-icon ui-icon-search"
+							onclick="engine1Dialog.show()"
+							rendered="#{not empty viewAircraftManager.selectedAircraft.engineOne}"
+							update="engine1dialog" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Engine Two: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.engineTwo}" />
+					</p:column>
+					<p:column>
+						<p:commandLink style="margin-left:20px"
+							styleClass="ui-icon ui-icon-search"
+							onclick="engine2Dialog.show()"
+							rendered="#{not empty viewAircraftManager.selectedAircraft.engineTwo}"
+							update="engine2dialog" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Propeller One: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.propellerOne}" />
+					</p:column>
+					<p:column>
+						<p:commandLink style="margin-left:20px"
+							styleClass="ui-icon ui-icon-search"
+							onclick="propeller1Dialog.show()"
+							rendered="#{not empty viewAircraftManager.selectedAircraft.propellerOne}"
+							update="propeller1dialog" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Propeller Two: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.propellerTwo}" />
+					</p:column>
+					<p:column>
+						<p:commandLink styleClass="ui-icon ui-icon-search" style="margin-left:20px"
+							onclick="propeller2Dialog.show()"
+							rendered="#{not empty viewAircraftManager.selectedAircraft.propellerTwo}"
+							update="propeller2dialog" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:fieldset>
+		<p:spacer height="20" />
+		<p:fieldset legend="Maintenance History" toggleable="true"
+			id="historyfieldset">
+			<p:dataTable>
+
+			</p:dataTable>
+		</p:fieldset>
+	</h:panelGroup>
+	<!--========================================================	Engine One Detail Dialog	====================================================-->
+	<p:dialog widgetVar="engine1Dialog" header="Engine Detail"
+		resizable="false" showEffect="puff">
+		<p:fieldset legend="Engine One">
+			<p:panelGrid styleClass="panelgridPadding" id="engine1dialog"
+				style="font-size:100% !important">
+				<p:row>
+					<p:column style="text-align:right;">
+						<h:outputLabel value="Name: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.engineOne.name}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Number: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.engineOne.number}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Model: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.engineOne.model}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Serial Number: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.engineOne.serialNumber}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Manufacture Year: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.engineOne.manufacYear}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Manufacture Plant: "
+							style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.engineOne.manufacPlant}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Engine Cycles: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.engineOne.currentEngineCycle}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Flight Hours: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.engineOne.currentFlightHour}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Status: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.engineOne.status.value}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Current Attached: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.register}" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:fieldset>
+	</p:dialog>
+	<!--============================================================================================================================================-->
+
+	<!--========================================================	Engine Two Detail Dialog	====================================================-->
+	<p:dialog widgetVar="engine2Dialog" header="Engine Detail"
+		resizable="false" showEffect="puff">
+		<p:fieldset legend="Engine Two">
+			<p:panelGrid styleClass="panelgridPadding" id="engine2dialog"
+				style="font-size:100% !important">
+				<p:row>
+					<p:column style="text-align:right;">
+						<h:outputLabel value="Name: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.engineTwo.name}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Number: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.engineTwo.number}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Model: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.engineTwo.model}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Serial Number: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.engineTwo.serialNumber}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Manufacture Year: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.engineTwo.manufacYear}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Manufacture Plant: "
+							style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.engineTwo.manufacPlant}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Engine Cycles: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.engineTwo.currentEngineCycle}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Flight Hours: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.engineTwo.currentFlightHour}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Status: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.engineTwo.status.value}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Current Attached: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.register}" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:fieldset>
+	</p:dialog>
+	<!--============================================================================================================================================-->
+
+	<!--========================================================	Propeller One Detail Dialog	====================================================-->
+	<p:dialog widgetVar="propeller1Dialog" header="Propeller Detail"
+		resizable="false" showEffect="puff">
+		<p:fieldset legend="Propeller One">
+			<p:panelGrid styleClass="panelgridPadding" id="propeller1dialog"
+				style="font-size:100% !important">
+				<p:row>
+					<p:column style="text-align:right;">
+						<h:outputLabel value="Name: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.propellerOne.name}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Number: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.propellerOne.number}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Model: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.propellerOne.model}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Serial Number: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.propellerOne.serialNumber}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Manufacture Year: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.propellerOne.manufacYear}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Manufacture Plant: "
+							style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.propellerOne.manufacPlant}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Propeller Cycles: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.propellerOne.currentPropellerCycle}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Flight Hours: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.propellerOne.currentFlightHour}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Status: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.propellerOne.status.value}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Current Attached: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.register}" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:fieldset>
+	</p:dialog>
+	<!--============================================================================================================================================-->
+
+	<!--========================================================	Propeller Two Detail Dialog	====================================================-->
+	<p:dialog widgetVar="propeller2Dialog" header="Propeller Detail"
+		resizable="false" showEffect="puff">
+		<p:fieldset legend="Propeller Two">
+			<p:panelGrid styleClass="panelgridPadding" id="propeller2dialog"
+				style="font-size:100% !important">
+				<p:row>
+					<p:column style="text-align:right;">
+						<h:outputLabel value="Name: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.propellerTwo.name}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Number: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.propellerTwo.number}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Model: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.propellerTwo.model}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Serial Number: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.propellerTwo.serialNumber}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Manufacture Year: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.propellerTwo.manufacYear}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Manufacture Plant: "
+							style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.propellerTwo.manufacPlant}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Propeller Cycles: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.propellerTwo.currentPropellerCycle}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Flight Hours: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.propellerTwo.currentFlightHour}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Status: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.propellerTwo.status.value}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="text-align:right">
+						<h:outputLabel value="Current Attached: " style="font-weight:bold" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{viewAircraftManager.selectedAircraft.register}" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:fieldset>
+	</p:dialog>
+	<!--============================================================================================================================================-->
+
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<script type="text/javascript">
+	function showDeleteDialog(){
+	deleteEngineConfirm.show(); 
+    document.getElementById("center").style.zIndex= "";
+}
+
+</script>
+</h:head>
+<body>
+	<p:blockUI trigger="savebtn" block=":centerform:inputpanelgroup">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI trigger="clearbtn" block=":centerform:inputpanelgroup">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI widgetVar="blockInputUI" block="inputpanelgroup">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI widgetVar="blockListUI" block="listpanelgroup">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<h3 style="margin-top: 0;" class="ui-widget-header ui-corner-all">
+		<h:outputText value="Create/Edit Engine" />
+	</h3>
+
+	<p:fieldset legend="Engine List" toggleable="true" id="listpanelgroup">
+		<p:dataTable value="#{engineManager.engineList}" var="engine"
+			id="engineListTable" rows="10" paginator="true" paginatorAlwaysVisible="false"
+			paginatorPosition="bottom" styleClass="table-hilight">
+			<p:column headerText="Name" style="width:15%">
+				<h:outputText value="#{engine.name}" />
+			</p:column>
+			<p:column headerText="Number" style="width:15%">
+				<h:outputText value="#{engine.number}" />
+			</p:column>
+			<p:column headerText="Model" style="width:15%">
+				<h:outputText value="#{engine.model}" />
+			</p:column>
+			<p:column headerText="Serial Number" style="width:15%">
+				<h:outputText value="#{engine.serialNumber}" />
+			</p:column>
+			<p:column headerText="Engine Cycle" style="text-align:right;width:5%">
+				<h:outputText value="#{engine.currentEngineCycle}" />
+			</p:column>
+			<p:column headerText="Flight Hour" style="text-align:right;width:5%">
+				<h:outputText value="#{engine.currentFlightHour}" />
+			</p:column>
+			<p:column headerText="Status" style="width:10%">
+				<h:outputText value="#{engine.status.value}" />
+			</p:column>
+			<p:column style="text-align:center">
+				<p:commandButton icon="ui-icon-pencil"
+					update=":centerform:engineinputfieldset"
+					action="#{engineManager.setLegend}" title="Edit"
+					onstart="blockInputUI.show()" oncomplete="blockInputUI.hide()"
+					style="width:16px;height:16px">
+					<f:setPropertyActionListener value="#{engine}"
+						target="#{engineManager.editEngine}" />
+				</p:commandButton>
+				<p:commandButton icon="ui-icon-trash" onclick="showDeleteDialog()"
+					action="#{engineManager.deleteEngine}" update="engineListTable"
+					style="margin-left:5px;width:16px;height:16px" title="Delete">
+					<f:setPropertyActionListener value="#{engine}"
+						target="#{engineManager.deletedEngine}" />
+				</p:commandButton>
+			</p:column>
+		</p:dataTable>
+	</p:fieldset>
+	<p:spacer height="20" />
+	<h:panelGroup id="inputpanelgroup" style="float:left;width:100%">
+		<p:fieldset legend="#{engineManager.inputFieldLegend}"
+			toggleable="true" id="engineinputfieldset">
+			<h:panelGrid columns="1">
+				<h:outputText value="Name" style="font-weight:bold" />
+				<p:inputText value="#{engineManager.editEngine.name}" size="50"
+					style="margin-bottom:6px" />
+				<h:outputText value="Number" style="font-weight:bold" />
+				<p:inputText value="#{engineManager.editEngine.number}" size="50"
+					style="margin-bottom:6px" />
+				<h:outputText value="Model" style="font-weight:bold" />
+				<p:inputText value="#{engineManager.editEngine.model}" size="50"
+					style="margin-bottom:6px" />
+				<h:outputText value="Serial Number" style="font-weight:bold" />
+				<p:inputText value="#{engineManager.editEngine.serialNumber}"
+					size="50" style="margin-bottom:6px" />
+				<h:outputText value="Manufacture Year" style="font-weight:bold" />
+				<p:inputText value="#{engineManager.editEngine.manufacYear}"
+					size="50" style="margin-bottom:6px" />
+				<h:outputText value="Manufacture Plant" style="font-weight:bold" />
+				<p:inputText value="#{engineManager.editEngine.manufacPlant}"
+					size="50" style="margin-bottom:6px" />
+				<h:outputText value="Engine Cycle" style="font-weight:bold" />
+				<p:inputText value="#{engineManager.editEngine.currentEngineCycle}"
+					size="50" style="margin-bottom:6px" />
+				<h:outputText value="Flight Hour" style="font-weight:bold" />
+				<p:inputText value="#{engineManager.editEngine.currentFlightHour}"
+					size="50" style="margin-bottom:6px" />
+			</h:panelGrid>
+			<p:separator />
+			<h:panelGrid columns="2">
+				<p:commandButton value="Save" action="#{engineManager.saveEngine}"
+					update="engineListTable,:centerform:engineinputfieldset, :growl"
+					id="savebtn" icon="ui-icon-disk" />
+				<p:commandButton value="Clear" action="#{engineManager.clearData}"
+					update=":centerform:engineinputfieldset" icon="ui-icon-refresh"
+					id="clearbtn" />
+			</h:panelGrid>
+		</p:fieldset>
+	</h:panelGroup>
+	<p:confirmDialog
+		message="This engine will be deleted, do you want to proceed ?"
+		header="Delete Engine" severity="alert"
+		widgetVar="deleteEngineConfirm">
+		<p:commandButton value="Yes"
+			oncomplete="deleteEngineConfirm.hide();blockListUI.hide()"
+			action="#{engineManager.deleteEngine}"
+			update="engineListTable,:centerform:engineinputfieldset, :growl"
+			onstart="blockListUI.show()" />
+		<p:commandButton value="No" onclick="deleteEngineConfirm.hide()" />
+	</p:confirmDialog>
+
+</body>
+</html>

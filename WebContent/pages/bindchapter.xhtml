@@ -1,0 +1,318 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<script type="text/javascript">
+	function showDeleteDialog(){
+		deleteBindingConfirm.show(); 
+    document.getElementById("center").style.zIndex= "";
+}
+	</script>
+	<style type="text/css">
+.ui-selectonemenu-panel .ui-selectonemenu-filter {
+	width: 210px;
+}
+</style>
+</h:head>
+<body>
+	<p:blockUI trigger="selectaircraft" block="selectfieldset">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI trigger="deviceselectonemenu" block="selectfieldset">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI trigger="chapterselectonemenu" block="selectfieldset">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI trigger="inspectionselectonemenu" block="selectfieldset">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI trigger="addchapter" block="selectfieldset">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI trigger="addinspection" block="selectfieldset">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI trigger="savebtn" block="editpanelgroup">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI widgetVar="blockInputUI" block="editpanelgroup">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI widgetVar="blockListUI" block="listfieldset">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<h3 style="margin-top: 0;" class="ui-widget-header ui-corner-all">
+		<h:outputText value="Bind Inspection" />
+	</h3>
+	<p:fieldset id="selectfieldset">
+		<h:panelGrid columns="1">
+			<h:outputText value="Device Type" style="font-weight:bold" />
+			<p:selectOneMenu value="#{bindingManager.selectedDeviceType}"
+				id="selectaircraft" style="width:250px;margin-bottom:6px">
+				<f:selectItems value="#{bindingManager.deviceTypeSelectItemList}" />
+				<p:ajax listener="#{bindingManager.deviceTypeSelected}"
+					update="deviceselectonemenu, chapterselectonemenu, inspectionselectonemenu, bindingTableList, addchapter, addinspection" />
+			</p:selectOneMenu>
+			<h:outputText value="Device" style="font-weight:bold" />
+			<p:selectOneMenu value="#{bindingManager.deviceID}"
+				id="deviceselectonemenu" style="width:250px;margin-bottom:6px">
+				<f:selectItems value="#{bindingManager.deviceSelectItemList}" />
+				<p:ajax listener="#{bindingManager.deviceSelected}"
+					update="chapterselectonemenu, inspectionselectonemenu, bindingTableList, addchapter, addinspection" />
+			</p:selectOneMenu>
+			<h:outputLabel value="Chapter" style="font-weight:bold" />
+			<h:panelGroup layout="block" style="margin-bottom:-5px">
+				<p:selectOneMenu value="#{bindingManager.chapterID}"
+					id="chapterselectonemenu" style="width:250px;" filter="true"
+					filterMatchMode="contains">
+					<f:selectItems value="#{bindingManager.chapterSelectItemList}" />
+					<p:ajax listener="#{bindingManager.chapterSelected}"
+						update="inspectionselectonemenu, addchapter, addinspection" />
+				</p:selectOneMenu>
+				<p:commandButton value="Add" icon="ui-icon-plus"
+					action="#{bindingManager.addChapter}"
+					update="bindingTableList, inspectionselectonemenu, chapterselectonemenu, addchapter, addinspection, :growl"
+					disabled="#{bindingManager.chapterID == 0}" id="addchapter"
+					oncomplete="bindingWidget.filter()"
+					style="top:-7px;margin-left:10px" />
+			</h:panelGroup>
+			<h:outputLabel value="Inspection" style="font-weight:bold" />
+			<h:panelGroup layout="block">
+				<p:selectOneMenu value="#{bindingManager.inspectionID}"
+					id="inspectionselectonemenu" style="width:250px" filter="true"
+					filterMatchMode="contains">
+					<f:selectItems value="#{bindingManager.inspectionSelectItemList}" />
+					<p:ajax listener="#{bindingManager.inspectionSelected}"
+						update="addinspection" />
+				</p:selectOneMenu>
+				<p:commandButton value="Add" icon="ui-icon-plus"
+					action="#{bindingManager.addInspection}"
+					update="bindingTableList, inspectionselectonemenu, inspectionselectonemenu, addinspection, :growl"
+					disabled="#{bindingManager.inspectionID == 0}" id="addinspection"
+					oncomplete="bindingWidget.filter()"
+					style="top:-7px;margin-left:10px" />
+			</h:panelGroup>
+		</h:panelGrid>
+	</p:fieldset>
+	<p:spacer height="20" />
+	<p:fieldset legend="Binding List" toggleable="true" id="listfieldset">
+		<p:dataTable value="#{bindingManager.bindingList}"
+			id="bindingTableList" var="binding" paginator="true" rows="10" paginatorAlwaysVisible="false"
+			paginatorPosition="bottom" filteredValue="#{bindingManager.filtered}"
+			widgetVar="bindingWidget" styleClass="table-hilight">
+			<p:column headerText="Chapter" filterMatchMode="exact"
+				filterBy="#{binding.chapter}"
+				filterOptions="#{bindingManager.filterOptions}" style="width:25%">
+				<h:outputText value="#{binding.chapter}" />
+			</p:column>
+			<p:column headerText="Inspection" filterMatchMode="contains"
+				filterBy="#{binding.inspection.name}" style="width:25%">
+				<h:outputText value="#{binding.inspection.name}" />
+			</p:column>
+			<p:column headerText="Inspection Type" filterMatchMode="exact"
+				filterBy="#{binding.inspection.type.value}"
+				filterOptions="#{bindingManager.inspectionTypeFilterOptions}"
+				style="width:5%">
+				<h:outputText value="#{binding.inspection.type.value}" />
+			</p:column>
+			<p:column headerText="Ltd L/C" style="text-align:right;width:5%">
+				<h:outputText value="#{binding.inspection.limitedLandingCycle}"
+					rendered="#{binding.inspection.limitedLandingCycle != 0}" />
+				<h:outputText value="N/A"
+					rendered="#{binding.inspection.limitedLandingCycle == 0}" />
+			</p:column>
+			<p:column headerText="Ltd E/C" style="text-align:right;width:5%">
+				<h:outputText value="#{binding.inspection.limitedEngineCycle}"
+					rendered="#{binding.inspection.limitedEngineCycle != 0}" />
+				<h:outputText value="N/A"
+					rendered="#{binding.inspection.limitedEngineCycle == 0}" />
+			</p:column>
+			<p:column headerText="Ltd P/C" style="text-align:right;width:5%">
+				<h:outputText value="#{binding.inspection.limitedPropellerCycle}"
+					rendered="#{binding.inspection.limitedPropellerCycle != 0}" />
+				<h:outputText value="N/A"
+					rendered="#{binding.inspection.limitedPropellerCycle == 0}" />
+			</p:column>
+			<p:column headerText="Ltd F/H" style="text-align:right;width:5%">
+				<h:outputText value="#{binding.inspection.limitedFlightHour}"
+					rendered="#{binding.inspection.limitedFlightHour != 0}" />
+				<h:outputText value="N/A"
+					rendered="#{binding.inspection.limitedFlightHour == 0}" />
+			</p:column>
+			<p:column headerText="Ltd Day" style="text-align:right;width:5%">
+				<h:outputText value="#{binding.inspection.limitedTime}"
+					rendered="#{binding.inspection.limitedTime != 0}" />
+				<h:outputText value="N/A"
+					rendered="#{binding.inspection.limitedTime == 0}" />
+			</p:column>
+			<p:column style="text-align:center">
+				<p:commandButton icon="ui-icon-pencil"
+					update=":centerform:inputfieldset"
+					action="#{bindingManager.setSelectedBinding}" title="Edit"
+					onstart="blockInputUI.show()" oncomplete="blockInputUI.hide()"
+					style="width:16px;height:16px">
+					<f:setPropertyActionListener value="#{binding}"
+						target="#{bindingManager.editBinding}" />
+				</p:commandButton>
+				<p:commandButton icon="ui-icon-trash" onclick="showDeleteDialog()"
+					style="margin-left:5px;width:16px;height:16px" title="Delete">
+					<f:setPropertyActionListener
+						target="#{bindingManager.deletedBinding}" value="#{binding}" />
+				</p:commandButton>
+			</p:column>
+		</p:dataTable>
+	</p:fieldset>
+	<p:spacer height="20" />
+	<h:panelGroup id="editpanelgroup" style="float:left;width:100%">
+		<p:fieldset legend="Edit Parameters #{bindingManager.legendText}"
+			toggleable="true" id="inputfieldset">
+			<h:panelGrid columns="3" styleClass="verticaltop">
+				<h:panelGrid columns="1">
+					<h:outputLabel value="Previous Landing Cycles"
+						style="font-weight:bold" />
+					<p:inputText
+						value="#{bindingManager.editBinding.previousLandingCycle}"
+						valueChangeListener="#{bindingManager.calculateNextLandingCycle}"
+						disabled="#{bindingManager.editBinding.inspection.limitedLandingCycle == 0 or bindingManager.editBinding.inspection == null}"
+						size="30">
+						<p:ajax update="nextland" />
+					</p:inputText>
+					<h:outputLabel value="Previous Engine Cycles"
+						style="font-weight:bold" />
+					<p:inputText
+						value="#{bindingManager.editBinding.previousEngineCycle}"
+						valueChangeListener="#{bindingManager.calculateNextEngineCycle}"
+						disabled="#{bindingManager.editBinding.inspection.limitedEngineCycle == 0 or bindingManager.editBinding.inspection == null}"
+						size="30">
+						<p:ajax update="nextengine" />
+					</p:inputText>
+					<h:outputLabel value="Previous Propeller Cycles"
+						style="font-weight:bold" />
+					<p:inputText
+						value="#{bindingManager.editBinding.previousPropellerCycle}"
+						valueChangeListener="#{bindingManager.calculateNextPropellerCycle}"
+						disabled="#{bindingManager.editBinding.inspection.limitedPropellerCycle == 0 or bindingManager.editBinding.inspection == null}"
+						size="30">
+						<p:ajax update="nextprop" />
+					</p:inputText>
+					<h:outputLabel value="Previous Flight Hours"
+						style="font-weight:bold" />
+					<p:inputText
+						value="#{bindingManager.editBinding.previousFlightHour}"
+						valueChangeListener="#{bindingManager.calculateNextFlightHour}"
+						disabled="#{bindingManager.editBinding.inspection.limitedFlightHour == 0 or bindingManager.editBinding.inspection == null}"
+						size="30">
+						<p:ajax update="nextflight" />
+					</p:inputText>
+					<h:outputLabel value="Previous Due Date" style="font-weight:bold" />
+					<p:calendar value="#{bindingManager.editBinding.previousDueDate}"
+						pattern="dd/MM/yyyy"
+						disabled="#{bindingManager.editBinding.inspection.limitedTime == 0 or bindingManager.editBinding.inspection == null}"
+						size="30">
+						<p:ajax event="dateSelect"
+							listener="#{bindingManager.calculateNextDueDate}"
+							update="nextdate" />
+					</p:calendar>
+				</h:panelGrid>
+				<h:panelGrid columns="1" style="margin-left:100px">
+					<h:outputLabel value="Current Landing Cycles"
+						style="font-weight:bold" />
+					<p:inputText
+						value="#{bindingManager.editBinding.currentLandingCycle}"
+						disabled="#{bindingManager.editBinding.inspection.limitedLandingCycle == 0 or bindingManager.editBinding.inspection == null}"
+						size="30" />
+					<h:outputLabel value="Current Engine Cycles"
+						style="font-weight:bold" />
+					<p:inputText
+						value="#{bindingManager.editBinding.currentEngineCycle}"
+						disabled="#{bindingManager.editBinding.inspection.limitedEngineCycle == 0 or bindingManager.editBinding.inspection == null}"
+						size="30" />
+					<h:outputLabel value="Current Propeller Cycles"
+						style="font-weight:bold" />
+					<p:inputText
+						value="#{bindingManager.editBinding.currentPropellerCycle}"
+						disabled="#{bindingManager.editBinding.inspection.limitedPropellerCycle == 0 or bindingManager.editBinding.inspection == null}"
+						size="30" />
+					<h:outputLabel value="Current Flight Hours"
+						style="font-weight:bold" />
+					<p:inputText
+						value="#{bindingManager.editBinding.currentFlightHour}"
+						disabled="#{bindingManager.editBinding.inspection.limitedFlightHour == 0 or bindingManager.editBinding.inspection == null}"
+						size="30" />
+					<h:outputLabel value="Next Due Date" style="font-weight:bold" />
+					<p:calendar id="nextdate"
+						value="#{bindingManager.editBinding.nextDueDate}"
+						pattern="dd/MM/yyyy"
+						disabled="#{bindingManager.editBinding.inspection.limitedTime == 0 or bindingManager.editBinding.inspection == null}"
+						size="30" />
+				</h:panelGrid>
+				<h:panelGrid columns="1" style="margin-left:100px">
+					<h:outputLabel value="Next Landing Cycles" style="font-weight:bold" />
+					<p:inputText id="nextland"
+						value="#{bindingManager.editBinding.nextLandingCyccle}"
+						disabled="#{bindingManager.editBinding.inspection.limitedLandingCycle == 0 or bindingManager.editBinding.inspection == null}"
+						size="30" />
+					<h:outputLabel value="Next Engine Cycles" style="font-weight:bold" />
+					<p:inputText id="nextengine"
+						value="#{bindingManager.editBinding.nextEngineCycle}"
+						disabled="#{bindingManager.editBinding.inspection.limitedEngineCycle == 0 or bindingManager.editBinding.inspection == null}"
+						size="30" />
+					<h:outputLabel value="Next Propeller Cycles"
+						style="font-weight:bold" />
+					<p:inputText id="nextprop"
+						value="#{bindingManager.editBinding.nextPropellerCycle}"
+						disabled="#{bindingManager.editBinding.inspection.limitedPropellerCycle == 0 or bindingManager.editBinding.inspection == null}"
+						size="30" />
+					<h:outputLabel value="Next Flight Hours" style="font-weight:bold" />
+					<p:inputText id="nextflight"
+						value="#{bindingManager.editBinding.nextFlightHour}"
+						disabled="#{bindingManager.editBinding.inspection.limitedFlightHour == 0 or bindingManager.editBinding.inspection == null}"
+						size="30" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<p:separator />
+			<h:panelGrid columns="2">
+				<p:commandButton value="Save" icon="ui-icon-disk"
+					action="#{bindingManager.saveBinding}"
+					update="inputfieldset, :growl"
+					disabled="#{bindingManager.editBinding.inspection == null}"
+					id="savebtn" />
+			</h:panelGrid>
+		</p:fieldset>
+	</h:panelGroup>
+	<p:confirmDialog
+		message="This binding will be deleted, do you want to proceed ?"
+		header="Delete Binding" severity="alert"
+		widgetVar="deleteBindingConfirm">
+		<p:commandButton value="Yes"
+			oncomplete="deleteBindingConfirm.hide();blockListUI.hide();bindingWidget.filter()"
+			action="#{bindingManager.deleteBinding}"
+			update="bindingTableList :centerform:inputfieldset, inspectionselectonemenu, :growl"
+			onstart="blockListUI.show()" />
+		<p:commandButton value="No" onclick="deleteBindingConfirm.hide()" />
+	</p:confirmDialog>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory>
+		<property name="hibernate.connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
+<!-- 		<property name="hibernate.connection.driver_class">com.p6spy.engine.spy.P6SpyDriver</property> -->
+<!-- 		<property name="hibernate.connection.driver_class">net.sf.log4jdbc.DriverSpy</property> -->
+<!-- 		<property name="hibernate.connection.url">jdbc:log4jdbc:oracle:thin:@localhost:1521:xe</property> -->
+		<property name="hibernate.connection.url">jdbc:oracle:thin:@172.16.72.137:1521:xe</property>
+		<property name="hibernate.connection.username">amuser</property>
+		<property name="hibernate.connection.password">oracle</property>
+		<property name="hibernate.dialect">org.hibernate.dialect.OracleDialect</property>
+<!-- 		<property name="hibernate.show_sql">true</property> -->
+<!-- 		<property name="hibernate.format_sql">true</property> -->
+<!-- 		<property name="use_sql_comments">true</property> -->
+		
+		<mapping class="am.model.Aircraft"/>
+		<mapping class="am.model.Engine"/>
+		<mapping class="am.model.Location"/>
+		<mapping class="am.model.Propeller"/>
+		<mapping class="am.model.Chapter"/>
+		<mapping class="am.model.Inspection"/>
+		<mapping class="am.model.SpareParts"/>
+		<mapping class="am.model.PartsCompability"/>
+		<mapping class="am.model.Binding"/>
+		<mapping class="am.model.Threshold"/>
+		<mapping class="am.model.WorkCard"/>
+		<mapping class="am.model.WorkCardInspection"/>
+		<mapping class="am.model.WorkCardParts"/>
+		<mapping class="am.model.JourneyLog"/>
+		<mapping class="am.model.JourneyTrip"/>
+	</session-factory>
+</hibernate-configuration>

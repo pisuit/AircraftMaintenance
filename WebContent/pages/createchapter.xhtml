@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<script type="text/javascript">
+	function showDeleteDialog(){
+		deleteChapterConfirm.show(); 
+    document.getElementById("center").style.zIndex= "";
+}
+	</script>
+</h:head>
+<body>
+	<p:blockUI trigger="savebtn" block="inputpanelgroup">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI trigger="clearbtn" block="inputpanelgroup">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI widgetVar="blockInputUI" block="inputpanelgroup">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI widgetVar="blockListUI" block="listfieldset">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<h3 style="margin-top: 0;" class="ui-widget-header ui-corner-all">
+		<h:outputText value="Create/Edit Chapter" />
+	</h3>
+	<p:fieldset legend="Chapter List" toggleable="true"
+		style="width:47%;float:left" id="listfieldset">
+		<p:dataTable value="#{chapterManager.chapterList}" var="chapter"
+			id="chapterListTable" rows="10" paginator="true" paginatorAlwaysVisible="false"
+			paginatorPosition="bottom" filteredValue="#{chapterManager.filtered}"
+			widgetVar="chapterWidget" styleClass="table-hilight">
+			<p:column headerText="Number" filterBy="#{chapter.number}"
+				filterMatchMode="contains" style="text-align:right;width:10%">
+				<h:outputText value="#{chapter.number}" />
+			</p:column>
+			<p:column headerText="Name" filterBy="#{chapter.name}"
+				filterMatchMode="contains" style=";width:70%">
+				<h:outputText value="#{chapter.name}" />
+			</p:column>
+			<p:column style="text-align:center">
+				<p:commandButton icon="ui-icon-pencil"
+					action="#{chapterManager.setSelectedChapter}"
+					update=":centerform:chapterinputfieldset" title="Edit"
+					onstart="blockInputUI.show()" oncomplete="blockInputUI.hide()"
+					style="width:16px;height:16px">
+					<f:setPropertyActionListener target="#{chapterManager.editChapter}"
+						value="#{chapter}" />
+				</p:commandButton>
+				<p:commandButton icon="ui-icon-trash" onclick="showDeleteDialog()"
+					style="margin-left:5px;width:16px;height:16px" title="Delete">
+					<f:setPropertyActionListener
+						target="#{chapterManager.deletedChapter}" value="#{chapter}" />
+				</p:commandButton>
+			</p:column>
+		</p:dataTable>
+	</p:fieldset>
+	<h:panelGroup id="inputpanelgroup" style="width:47%;float:left">
+		<p:fieldset legend="#{chapterManager.inputFieldsetLegend}"
+			toggleable="true" id="chapterinputfieldset">
+			<h:panelGrid columns="1">
+				<h:outputLabel value="Number" style="font-weight:bold" />
+				<p:inputText value="#{chapterManager.editChapter.number}" size="50"
+					style="margin-bottom:6px" />
+				<h:outputLabel value="Name" style="font-weight:bold" />
+				<p:inputText value="#{chapterManager.editChapter.name}" size="50"
+					style="margin-bottom:6px" />
+			</h:panelGrid>
+			<p:separator />
+			<h:panelGrid columns="2">
+				<p:commandButton value="Save" icon="ui-icon-disk"
+					action="#{chapterManager.saveChapter}"
+					update="chapterListTable, chapterinputfieldset, :growl"
+					id="savebtn" oncomplete="chapterWidget.filter()" />
+				<p:commandButton value="Clear" icon="ui-icon-refresh"
+					action="#{chapterManager.clearData}" update="chapterinputfieldset"
+					id="clearbtn" />
+			</h:panelGrid>
+		</p:fieldset>
+	</h:panelGroup>
+	<p:confirmDialog
+		message="This chapter will be deleted, do you want to proceed ?"
+		header="Delete Chapter" severity="alert"
+		widgetVar="deleteChapterConfirm">
+		<p:commandButton value="Yes"
+			oncomplete="deleteChapterConfirm.hide();blockListUI.hide();chapterWidget.filter()"
+			action="#{chapterManager.deleteChapter}"
+			update="chapterListTable, :centerform:chapterinputfieldset, :growl"
+			onstart="blockListUI.show()" />
+		<p:commandButton value="No" onclick="deleteChapterConfirm.hide()" />
+	</p:confirmDialog>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+</h:head>
+<body>
+	<h:outputStylesheet library="css" name="global.css" />
+	<h:form>
+			<p:panel style="width:300px" >
+				<f:facet name="header">
+					<div style="text-align: center">
+						<h:outputText value="Aircraft Maintenance System" />
+					</div>
+				</f:facet>
+				<h:panelGrid columns="2">
+					<h:outputText value="Username:" />
+					<p:inputText value="#{loginManager.username}" />
+					<h:outputText value="Password:" />
+					<p:password value="#{loginManager.password}" feedback="false" />
+				</h:panelGrid>
+				<p:separator />
+				<p:commandButton value="Login" icon="ui-icon-circle-check" />
+			</p:panel>
+	</h:form>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<script type="text/javascript">
+	function showDeleteDialog(){
+		deleteWorkCArdConfirm.show(); 
+    	document.getElementById("center").style.zIndex= "";
+	}
+	
+    function showCloseDialog(){
+    	closeWorkCArdConfirm.show(); 
+        document.getElementById("center").style.zIndex= "";
+	}
+	
+</script>
+</h:head>
+<body>
+	<p:blockUI widgetVar="blockList" block=":centerform:listfieldset">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI widgetVar="blockInput" block=":centerform:inputfieldset">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<h3 style="margin-top: 0;" class="ui-widget-header ui-corner-all">
+		<h:outputText value="Manage Work Card" />
+	</h3>
+	<p:fieldset legend="Work Card List" toggleable="true" id="listfieldset">
+		<p:dataTable value="#{workCardManager.workCardList}" var="workcard"
+			paginatorPosition="bottom" rows="10" paginator="true"
+			paginatorAlwaysVisible="false" styleClass="table-hilight"
+			id="workcardlist" filteredValue="#{workCardManager.filtered}">
+			<p:column headerText="Card Number" style="width:15%"
+				filterBy="#{workcard.number}" filterMatchMode="contains">
+				<h:outputText value="#{workcard.number}" />
+			</p:column>
+			<p:column headerText="Job Number" style="width:10%">
+				<h:outputText value="#{workcard.jobNumber}" />
+			</p:column>
+			<p:column headerText="Aircraft" style="width:15%"
+				filterBy="#{workcard.aircraft.register}" filterMatchMode="exact"
+				filterOptions="#{workCardManager.aircraftFilterOptions}">
+				<h:outputText value="#{workcard.aircraft.register}" />
+			</p:column>
+			<p:column headerText="Created Date"
+				style="text-align:right;width:15%">
+				<h:outputText value="#{workcard.createDate}">
+					<f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT+7" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Status" style="width:15%"
+				filterBy="#{workcard.workCardStatus.value}" filterMatchMode="exact"
+				filterOptions="#{workCardManager.statusFilterOptions}">
+				<h:outputText value="#{workcard.workCardStatus.value}" />
+			</p:column>
+			<p:column headerText="Type" style="width:15%"
+				filterBy="#{workcard.maintenanceType.value}" filterMatchMode="exact"
+				filterOptions="#{workCardManager.typeFilterOptions}">
+				<h:outputText value="#{workcard.maintenanceType.value}" />
+			</p:column>
+			<p:column style="text-align:center">
+				<p:commandButton icon="ui-icon-pencil"
+					style="width:16px;height:16px" update=":centerform:inputcontainer"
+					action="#{workCardManager.workCardSelected()}"
+					onstart="blockInput.show()" oncomplete="blockInput.hide()">
+					<f:setPropertyActionListener
+						target="#{workCardManager.editWorkCard}" value="#{workcard}" />
+				</p:commandButton>
+				<p:commandButton icon="ui-icon-trash"
+					style="width:16px;height:16px;margin-left:5px" title="Delete"
+					onclick="showDeleteDialog()"
+					disabled="#{workcard.workCardStatus == 'COMPLETED'}">
+					<f:setPropertyActionListener
+						target="#{workCardManager.deletedWorkCard}" value="#{workcard}" />
+				</p:commandButton>
+				<p:commandButton icon="ui-icon-check"
+					style="width:16px;height:16px;margin-left:5px"
+					onclick="showCloseDialog()"
+					update=":centerform:closemessagecontainer"
+					disabled="#{workcard.workCardStatus == 'COMPLETED'}">
+					<f:setPropertyActionListener
+						target="#{workCardManager.closedWorkCard}" value="#{workcard}" />
+				</p:commandButton>
+			</p:column>
+		</p:dataTable>
+	</p:fieldset>
+	<p:spacer height="20" />
+	<p:fieldset legend="#{workCardManager.workcardFieldsetLegend}"
+		toggleable="true" id="inputfieldset">
+		<h:panelGroup layout="block" id="inputcontainer">
+			<h:panelGrid columns="2" styleClass="verticaltop">
+				<h:panelGrid columns="1">
+					<h:outputText value="Aircraft" style="font-weight:bold" />
+					<p:selectOneMenu value="#{workCardManager.aircraftID}"
+						style="width:250px;margin-bottom:6px">
+						<f:selectItems value="#{workCardManager.aircraftSelectItemList}" />
+						<p:ajax listener="#{workCardManager.aircraftSelected}"
+							update="workcardflighthour" />
+					</p:selectOneMenu>
+					<h:outputText value="Maintenance Type" style="font-weight:bold" />
+					<p:selectOneMenu value="#{workCardManager.selectedMaintenanceType}"
+						style="width:250px;margin-bottom:6px">
+						<f:selectItems
+							value="#{workCardManager.maintenanceTypeSelectItemList}" />
+						<p:ajax listener="#{workCardManager.maintenanceTypeSelected()}" />
+					</p:selectOneMenu>
+					<h:outputText value="Create Date" style="font-weight:bold" />
+					<p:calendar value="#{workCardManager.editWorkCard.createDate}"
+						pattern="dd/MM/yyyy" size="50" style="margin-bottom:6px" />
+					<h:outputText value="Card Number" style="font-weight:bold" />
+					<p:inputText value="#{workCardManager.editWorkCard.number}"
+						size="50" style="margin-bottom:6px" />
+					<h:outputText value="Job Number" style="font-weight:bold" />
+					<p:inputText value="#{workCardManager.editWorkCard.jobNumber}"
+						size="50" style="margin-bottom:6px" />
+					<h:outputText value="Flight Hours" style="font-weight:bold" />
+					<p:inputText value="#{workCardManager.editWorkCard.flightHour}"
+						size="50" id="workcardflighthour" style="margin-bottom:6px" />
+				</h:panelGrid>
+				<h:panelGrid columns="1" style="margin-left:100px">
+					<h:outputText value="Performer" style="font-weight:bold" />
+					<p:inputText value="#{workCardManager.editWorkCard.performer}"
+						size="50" style="margin-bottom:6px" />
+					<h:outputText value="Inspector" style="font-weight:bold" />
+					<p:inputText value="#{workCardManager.editWorkCard.inspector}"
+						size="50" style="margin-bottom:6px" />
+					<h:outputText value="Requirement Remark" style="font-weight:bold" />
+					<p:inputTextarea
+						value="#{workCardManager.editWorkCard.requireRemark}" rows="5"
+						style="width:400px;margin-bottom:6px" />
+					<h:outputText value="Performed Remark" style="font-weight:bold" />
+					<p:inputTextarea
+						value="#{workCardManager.editWorkCard.performRemark}" rows="5"
+						style="width:400px" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<p:spacer height="10" />
+			<p:panel header="Spare Parts" style="font-size:100% !important">
+				<h:panelGrid columns="3" cellspacing="3">
+					<h:outputText value="Spare Parts" style="font-weight:bold" />
+					<p:selectOneMenu value="#{workCardManager.selectedPart}"
+						style="width:250px" filter="true" filterMatchMode="contains"
+						id="partselect">
+						<f:selectItems value="#{workCardManager.partSelectItemList}" />
+						<p:ajax listener="#{workCardManager.sparePartSelected()}" />
+					</p:selectOneMenu>
+					<p:commandButton icon="ui-icon-plus" value="Add"
+						action="#{workCardManager.addPart()}"
+						update="partlist, partselect" />
+				</h:panelGrid>
+				<p:spacer height="10" />
+				<p:dataTable value="#{workCardManager.sparePartList}" var="part"
+					paginatorAlwaysVisible="false" paginator="true"
+					paginatorPosition="bottom" rows="10" id="partlist">
+					<p:column headerText="Part Name">
+						<h:outputText value="#{part.spareParts.name}" />
+					</p:column>
+					<p:column headerText="Part Number">
+						<h:outputText value="#{part.spareParts.number}" />
+					</p:column>
+					<p:column headerText="Serial Number">
+						<h:outputText value="#{part.spareParts.serialName}" />
+					</p:column>
+					<p:column headerText="Inspection">
+						<h:outputText value="#{part.spareParts.inspection.name}" />
+					</p:column>
+					<p:column headerText="Quantity" style="text-align:center">
+						<p:spinner value="#{part.quantity}" size="3" />
+					</p:column>
+					<p:column style="text-align:center">
+						<p:commandButton icon="ui-icon-trash"
+							style="width:16px;height:16px"
+							action="#{workCardManager.deletePart(part)}" update="partlist" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+			<p:spacer height="10" />
+			<p:panel header="Inspections" style="font-size:100% !important">
+				<p:dataTable
+					value="#{workCardManager.editWorkCard.cardInspectionsList}"
+					var="inspection" paginator="true" paginatorPosition="bottom"
+					paginatorAlwaysVisible="false" rows="10">
+					<p:column headerText="Inspection Name">
+						<h:outputText value="#{inspection.binding.inspection.name}" />
+					</p:column>
+					<p:column headerText="Chapter">
+						<h:outputText value="#{inspection.binding.inspection.chapter}" />
+					</p:column>
+					<p:column headerText="Inspection Type">
+						<h:outputText value="#{inspection.binding.inspection.type.value}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+			<p:separator />
+			<h:panelGrid columns="2">
+				<p:commandButton value="Save" icon="ui-icon-disk"
+					action="#{workCardManager.saveWorkCard()}"
+					update="inputcontainer, workcardlist" onstart="blockInput.show()"
+					oncomplete="blockInput.hide()"
+					disabled="#{workCardManager.editWorkCard != null and workCardManager.editWorkCard.workCardStatus == 'COMPLETED'}" />
+				<p:commandButton value="Clear" icon="ui-icon-refresh"
+					action="#{workCardManager.clearData()}" update="inputcontainer"
+					onstart="blockInput.show()" oncomplete="blockInput.hide()" />
+			</h:panelGrid>
+		</h:panelGroup>
+	</p:fieldset>
+	<p:confirmDialog
+		message="This work card will be deleted, do you want to proceed ?"
+		header="Delete Work Card" severity="alert"
+		widgetVar="deleteWorkCArdConfirm">
+		<p:commandButton value="Yes"
+			oncomplete="deleteWorkCArdConfirm.hide();blockList.hide()"
+			action="#{workCardManager.deleteWorkCard()}"
+			update="workcardlist, centerform:inputcontainer, :growl"
+			onstart="blockList.show()" />
+		<p:commandButton value="No" onclick="deleteWorkCArdConfirm.hide()" />
+	</p:confirmDialog>
+	<p:confirmDialog header="Close Work Card" severity="alert"
+		widgetVar="closeWorkCArdConfirm">
+		<f:facet name="message">
+			<h:panelGroup layout="vlocka" id="closemessagecontainer">
+				<h:outputText
+					value="This work card (#{workCardManager.closedWorkCard.number}) will be closed, do you want to proceed ?" />
+			</h:panelGroup>
+		</f:facet>
+		<p:commandButton value="Yes"
+			oncomplete="closeWorkCArdConfirm.hide();blockList.hide()"
+			action="#{workCardManager.closeWorkCard()}"
+			update="workcardlist, :growl" onstart="blockList.show()" />
+		<p:commandButton value="No" onclick="closeWorkCArdConfirm.hide()" />
+	</p:confirmDialog>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<script type="text/javascript">
+	function showDeleteDialog(){
+		deletePartsConfirm.show(); 
+    document.getElementById("center").style.zIndex= "";
+}
+	</script>
+</h:head>
+<body>
+	<p:blockUI trigger="savebtn" block="inputpanelgroup">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI trigger="clearbtn" block="inputpanelgroup">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI widgetVar="blockInputUI" block="inputpanelgroup">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI widgetVar="blockListUI" block="listfieldset">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<h3 style="margin-top: 0;" class="ui-widget-header ui-corner-all">
+		<h:outputText value="Create/Edit Spare Parts" />
+	</h3>
+	<p:fieldset legend="Spare Parts List" toggleable="true"
+		id="listfieldset">
+		<p:dataTable value="#{partsManager.partsList}" var="parts"
+			id="partsListTable" paginator="true" paginatorPosition="bottom"
+			paginatorAlwaysVisible="false" rows="10" widgetVar="sparepartWidget"
+			filteredValue="#{partsManager.filtered}" styleClass="table-hilight">
+			<p:column headerText="Part Name" filterBy="#{parts.name}"
+				filterMatchMode="contains" style="width:20%">
+				<h:outputText value="#{parts.name}" />
+			</p:column>
+			<p:column headerText="Part Number" filterBy="#{parts.number}"
+				filterMatchMode="contains" style="width:15%">
+				<h:outputText value="#{parts.number}" />
+			</p:column>
+			<p:column headerText="Serial Number" filterBy="#{parts.serialName}"
+				filterMatchMode="contains" style="width:15%">
+				<h:outputText value="#{parts.serialName}" />
+			</p:column>
+			<p:column headerText="Inspection" filterBy="#{parts.inspection.name}"
+				filterMatchMode="contains" style="width:20%">
+				<h:outputText value="#{parts.inspection.name}" />
+			</p:column>
+			<p:column headerText="Inspection Type"
+				filterBy="#{parts.inspection.type.value}" filterMatchMode="exact"
+				filterOptions="#{partsManager.inspectionTypeFilterOptions}"
+				style="width:5%">
+				<h:outputText value="#{parts.inspection.type.value}" />
+			</p:column>
+			<p:column headerText="Category" style="width:5%">
+				<h:outputText value="#{parts.categoryType.value}" />
+			</p:column>
+			<p:column headerText="Min Stock" style="text-align:right;width:5%">
+				<h:outputText value="#{parts.minStock}" />
+			</p:column>
+			<p:column headerText="Max Stock" style="text-align:right;width:5%">
+				<h:outputText value="#{parts.maxStock}" />
+			</p:column>
+			<p:column style="text-align:center">
+				<p:commandButton icon="ui-icon-pencil"
+					action="#{partsManager.setSelectedParts}"
+					update=":centerform:partsputfieldset" title="Edit"
+					onstart="blockInputUI.show()" oncomplete="blockInputUI.hide()"
+					style="height:16px;width:16px">
+					<f:setPropertyActionListener value="#{parts}"
+						target="#{partsManager.editParts}" />
+				</p:commandButton>
+				<p:commandButton icon="ui-icon-trash" onclick="showDeleteDialog()"
+					style="margin-left:5px;height:16px;width:16px" title="Delete">
+					<f:setPropertyActionListener value="#{parts}"
+						target="#{partsManager.deletedParts}" />
+				</p:commandButton>
+			</p:column>
+		</p:dataTable>
+	</p:fieldset>
+	<p:spacer height="20" />
+	<h:panelGroup id="inputpanelgroup" style="float:left;width:100%">
+		<p:fieldset legend="#{partsManager.inputFieldsetLegend}"
+			toggleable="true" id="partsputfieldset">
+			<h:panelGrid columns="2" styleClass="verticaltop">
+				<h:panelGrid columns="1">
+					<h:outputLabel value="Inspection" style="font-weight:bold" />
+					<h:panelGroup layout="block" style="margin-bottom:6px">
+						<p:selectOneMenu value="#{partsManager.inspectionID}"
+							style="width:250px" filter="true" filterMatchMode="contains">
+							<f:selectItems value="#{partsManager.inspectionSelectItemList}" />
+							<p:ajax listener="#{partsManager.inspectionSelected}" />
+						</p:selectOneMenu>
+						<p:selectBooleanCheckbox value="#{partsManager.inspectionLocked}"
+							style="margin-left:10px" />
+						<h:outputLabel value="Lock" style="margin-left:3px" />
+					</h:panelGroup>
+					<h:outputLabel value="Category" style="font-weight:bold" />
+					<p:selectOneMenu value="#{partsManager.selectedCategory}"
+						style="width:250px;margin-bottom:6px">
+						<f:selectItems value="#{partsManager.categorySelectItemList}" />
+						<p:ajax listener="#{partsManager.categorySelected}" />
+					</p:selectOneMenu>
+					<h:outputLabel value="Part Name" style="font-weight:bold" />
+					<p:inputText value="#{partsManager.editParts.name}" size="50"
+						style="margin-bottom:6px" />
+					<h:outputLabel value="Part Number" style="font-weight:bold" />
+					<p:inputText value="#{partsManager.editParts.number}" size="50"
+						style="margin-bottom:6px" />
+					<h:outputLabel value="Serial Number" style="font-weight:bold" />
+					<p:inputText value="#{partsManager.editParts.serialName}" size="50"
+						style="margin-bottom:6px" />
+					<h:outputLabel value="Supersede #1" style="font-weight:bold" />
+					<p:inputText value="#{partsManager.editParts.supersede1}" size="50"
+						style="margin-bottom:6px" />
+					<h:outputLabel value="Supersede #2" style="font-weight:bold" />
+					<p:inputText value="#{partsManager.editParts.supersede2}" size="50"
+						style="margin-bottom:6px" />
+					<h:outputLabel value="Supersede #3" style="font-weight:bold" />
+					<p:inputText value="#{partsManager.editParts.supersede3}" size="50"
+						style="margin-bottom:6px" />
+					<h:outputLabel value="Min Stock: " style="font-weight:bold" />
+					<p:inputText value="#{partsManager.editParts.minStock}" size="50"
+						style="margin-bottom:6px" />
+					<h:outputLabel value="Max Stock: " style="font-weight:bold" />
+					<p:inputText value="#{partsManager.editParts.maxStock}" size="50"
+						style="margin-bottom:6px" />
+					<h:outputLabel value="Stock Code: " style="font-weight:bold" />
+					<p:inputText value="#{partsManager.editParts.stockCode}" size="50"
+						style="margin-bottom:6px" />
+				</h:panelGrid>
+				<h:panelGrid columns="1" style="margin-left:100px">
+					<h:outputLabel value="Aircraft Compatible" style="font-weight:bold" />
+					<p:selectManyCheckbox value="#{partsManager.selectedAircraftList}"
+						style="margin-bottom:6px" layout="pageDirection">
+						<f:selectItems value="#{partsManager.aircraftItemList}" />
+					</p:selectManyCheckbox>
+					<h:outputLabel value="Engine Compatible" style="font-weight:bold" />
+					<p:selectManyCheckbox value="#{partsManager.selectedEngineList}"
+						style="margin-bottom:6px" layout="pageDirection">
+						<f:selectItems value="#{partsManager.engineItemList}" />
+					</p:selectManyCheckbox>
+					<h:outputLabel value="Propeller Compatible"
+						style="font-weight:bold" />
+					<p:selectManyCheckbox value="#{partsManager.selectedPropellerList}"
+						style="margin-bottom:6px" layout="pageDirection">
+						<f:selectItems value="#{partsManager.propellerItemList}" />
+					</p:selectManyCheckbox>
+				</h:panelGrid>
+			</h:panelGrid>
+			<p:separator />
+			<h:panelGrid columns="2">
+				<p:commandButton value="Save" icon="ui-icon-disk"
+					action="#{partsManager.saveParts}"
+					update="partsputfieldset, partsListTable, :growl" id="savebtn"
+					oncomplete="sparepartWidget.filter()" />
+				<p:commandButton value="Clear" icon="ui-icon-refresh"
+					action="#{partsManager.clearData}" update="partsputfieldset"
+					id="clearbtn" />
+			</h:panelGrid>
+		</p:fieldset>
+	</h:panelGroup>
+	<p:confirmDialog
+		message="This spare parts will be deleted, do you want to proceed ?"
+		header="Delete Spare Parts" severity="alert"
+		widgetVar="deletePartsConfirm">
+		<p:commandButton value="Yes"
+			oncomplete="deletePartsConfirm.hide();blockListUI.hide();sparepartWidget.filter()"
+			action="#{partsManager.deleteParts}"
+			update="partsListTable, :centerform:partsputfieldset, :growl"
+			onstart="blockListUI.show()" />
+		<p:commandButton value="No" onclick="deletePartsConfirm.hide()" />
+	</p:confirmDialog>
+</body>
+</html>

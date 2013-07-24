@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<script type="text/javascript">
+	function showDeleteDialog(){
+	deleteAircraftConfirm.show(); 
+    document.getElementById("center").style.zIndex= "";
+}
+
+</script>
+</h:head>
+<body>
+	<p:blockUI trigger="savebtn" block=":centerform:inputpanelgroup">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI trigger="clearbtn" block=":centerform:inputpanelgroup">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI widgetVar="blockInputUI" block="inputpanelgroup">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI widgetVar="blockListUI" block="listfieldset">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<h3 style="margin-top: 0;" class="ui-widget-header ui-corner-all">
+		<h:outputText value="Create/Edit Aircraft" />
+	</h3>
+
+	<p:fieldset legend="Aircraft List" toggleable="true" id="listfieldset">
+		<p:dataTable value="#{aircraftManager.aircraftList}" var="aircraft"
+			id="aircraftListTable" rows="10" paginator="true" paginatorAlwaysVisible="false"
+			paginatorPosition="bottom" styleClass="table-hilight">
+			<p:column headerText="Name" style="width:15%">
+				<h:outputText value="#{aircraft.name}" />
+			</p:column>
+			<p:column headerText="Register" style="width:15%">
+				<h:outputText value="#{aircraft.register}" />
+			</p:column>
+			<p:column headerText="Model" style="width:15%">
+				<h:outputText value="#{aircraft.model}" />
+			</p:column>
+			<p:column headerText="Serial Number" style="width:15%">
+				<h:outputText value="#{aircraft.serialNumber}" />
+			</p:column>
+			<p:column headerText="Landing Cycle"
+				style="text-align:right;width:5%">
+				<h:outputText value="#{aircraft.currentLandingCycle}" />
+			</p:column>
+			<p:column headerText="Flight Hour" style="text-align:right;width:5%">
+				<h:outputText value="#{aircraft.currentFlightHour}" />
+			</p:column>
+			<p:column headerText="Status" style="width:10%">
+				<h:outputText value="#{aircraft.status.value}" />
+			</p:column>
+			<p:column style="text-align:center">
+				<p:commandButton icon="ui-icon-pencil"
+					update=":centerform:aircraftinputfieldset"
+					action="#{aircraftManager.setSelectedAircraft}" title="Edit"
+					onstart="blockInputUI.show()" oncomplete="blockInputUI.hide()"
+					style="width:16px;height:16px">
+					<f:setPropertyActionListener
+						target="#{aircraftManager.editAircraft}" value="#{aircraft}" />
+				</p:commandButton>
+				<p:commandButton icon="ui-icon-trash" onclick="showDeleteDialog()"
+					style="margin-left:5px;width:16px;height:16px" title="Delete">
+					<f:setPropertyActionListener
+						target="#{aircraftManager.deletedAircraft}" value="#{aircraft}" />
+				</p:commandButton>
+			</p:column>
+		</p:dataTable>
+	</p:fieldset>
+	<p:spacer height="20" />
+	<h:panelGroup id="inputpanelgroup" style="float:left;width:100%">
+		<p:fieldset id="aircraftinputfieldset" toggleable="true"
+			legend="#{aircraftManager.inputFieldsetLegend}">
+			<h:panelGrid columns="2" styleClass="verticaltop">
+				<h:panelGrid columns="1">
+					<h:outputLabel value="Name" style="font-weight:bold" />
+					<p:inputText value="#{aircraftManager.editAircraft.name}" size="50"
+						style="margin-bottom:6px" />
+					<h:outputLabel value="Register" style="font-weight:bold" />
+					<p:inputText value="#{aircraftManager.editAircraft.register}"
+						size="50" style="margin-bottom:6px" />
+					<h:outputLabel value="Model" style="font-weight:bold" />
+					<p:inputText value="#{aircraftManager.editAircraft.model}"
+						size="50" style="margin-bottom:6px" />
+					<h:outputLabel value="Serial Number" style="font-weight:bold" />
+					<p:inputText value="#{aircraftManager.editAircraft.serialNumber}"
+						size="50" style="margin-bottom:6px" />
+					<h:outputLabel value="Manufacture Year" style="font-weight:bold" />
+					<p:inputText value="#{aircraftManager.editAircraft.manufacYear}"
+						size="50" style="margin-bottom:6px" />
+					<h:outputLabel value="Manufacture Plant" style="font-weight:bold" />
+					<p:inputText value="#{aircraftManager.editAircraft.manufacPlant}"
+						size="50" style="margin-bottom:6px" />
+					<h:outputLabel value="Number of Seat" style="font-weight:bold" />
+					<p:inputText value="#{aircraftManager.editAircraft.numberOfSeat}"
+						size="50" style="margin-bottom:6px" />
+					<h:outputText value="Landing Cycle" style="font-weight:bold" />
+					<p:inputText
+						value="#{aircraftManager.editAircraft.currentLandingCycle}"
+						size="50" style="margin-bottom:6px" />
+					<h:outputText value="Flight Hour" style="font-weight:bold" />
+					<p:inputText
+						value="#{aircraftManager.editAircraft.currentFlightHour}"
+						size="50" />
+				</h:panelGrid>
+				<h:panelGrid columns="1" style="margin-left:100px;">
+					<h:outputLabel value="Engine 1" style="font-weight:bold" />
+					<p:selectOneMenu value="#{aircraftManager.engineOneID}"
+						style="width:250px;margin-bottom:6px">
+						<f:selectItems value="#{aircraftManager.engineSelectItemList}" />
+						<p:ajax listener="#{aircraftManager.engineSelected('engineOne')}" />
+					</p:selectOneMenu>
+					<h:outputLabel value="Engine 2" style="font-weight:bold" />
+					<p:selectOneMenu value="#{aircraftManager.engineTwoID}"
+						style="width:250px;margin-bottom:6px">
+						<f:selectItems value="#{aircraftManager.engineSelectItemList}" />
+						<p:ajax listener="#{aircraftManager.engineSelected('engineTwo')}" />
+					</p:selectOneMenu>
+					<h:outputLabel value="Propeller 1" style="font-weight:bold" />
+					<p:selectOneMenu value="#{aircraftManager.propellerOneID}"
+						style="width:250px;margin-bottom:6px">
+						<f:selectItems value="#{aircraftManager.propellerSelectItemList}" />
+						<p:ajax
+							listener="#{aircraftManager.propellerSelected('propellerOne')}" />
+					</p:selectOneMenu>
+					<h:outputLabel value="Propeller 2" style="font-weight:bold" />
+					<p:selectOneMenu value="#{aircraftManager.propellerTwoID}"
+						style="width:250px;margin-bottom:6px">
+						<f:selectItems value="#{aircraftManager.propellerSelectItemList}" />
+						<p:ajax
+							listener="#{aircraftManager.propellerSelected('propellerTwo')}" />
+					</p:selectOneMenu>
+					<h:outputLabel value="NAVAID Equipment" style="font-weight:bold" />
+					<p:selectManyCheckbox style="margin-bottom:6px"
+						layout="pageDirection">
+						<f:selectItem itemLabel="A" itemValue="A" />
+						<f:selectItem itemLabel="B" itemValue="B" />
+						<f:selectItem itemLabel="C" itemValue="C" />
+					</p:selectManyCheckbox>
+				</h:panelGrid>
+			</h:panelGrid>
+			<p:separator />
+			<h:panelGrid columns="2">
+				<p:commandButton value="Save"
+					action="#{aircraftManager.saveAircraft}"
+					update="aircraftListTable, centerform:aircraftinputfieldset, :growl"
+					icon="ui-icon-disk" id="savebtn" />
+				<p:commandButton value="Clear" action="#{aircraftManager.clearData}"
+					update="centerform:aircraftinputfieldset" icon="ui-icon-refresh"
+					id="clearbtn" />
+			</h:panelGrid>
+		</p:fieldset>
+	</h:panelGroup>
+	<p:confirmDialog
+		message="This aircraft will be deleted, do you want to proceed ?"
+		header="Delete Aircraft" severity="alert"
+		widgetVar="deleteAircraftConfirm">
+		<p:commandButton value="Yes"
+			oncomplete="deleteAircraftConfirm.hide();blockListUI.hide()"
+			action="#{aircraftManager.deleteAircraft}"
+			update="aircraftListTable, centerform:aircraftinputfieldset, :growl"
+			onstart="blockListUI.show()" />
+		<p:commandButton value="No" onclick="deleteAircraftConfirm.hide()" />
+	</p:confirmDialog>
+
+</body>
+</html>

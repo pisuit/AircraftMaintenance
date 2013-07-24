@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<script type="text/javascript">
+	function showDeleteDialog(){
+	deletePropellerConfirm.show(); 
+    document.getElementById("center").style.zIndex= "";
+}
+
+</script>
+</h:head>
+<body>
+	<p:blockUI trigger="savebtn" block=":centerform:inputpanelgroup">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI trigger="clearbtn" block=":centerform:inputpanelgroup">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI widgetVar="blockInputUI" block="inputpanelgroup">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<p:blockUI widgetVar="blockListUI" block="listfieldset">
+		<h:outputText value="LOADING" />
+		<br />
+		<h:graphicImage value="../resources/images/ajax-loading.gif" />
+	</p:blockUI>
+	<h3 style="margin-top: 0;" class="ui-widget-header ui-corner-all">
+		<h:outputText value="Create/Edit Propeller" />
+	</h3>
+	<p:fieldset legend="Propeller List" toggleable="true" id="listfieldset">
+		<p:dataTable value="#{propellerManager.propellerList}" var="propeller"
+			paginator="true" rows="10" paginatorPosition="bottom" paginatorAlwaysVisible="false"
+			id="propellerListTable" styleClass="table-hilight">
+			<p:column headerText="Name" style="width:15%">
+				<h:outputText value="#{propeller.name}" />
+			</p:column>
+			<p:column headerText="Number" style="width:15%">
+				<h:outputText value="#{propeller.number}" />
+			</p:column>
+			<p:column headerText="Model" style="width:15%">
+				<h:outputText value="#{propeller.model}" />
+			</p:column>
+			<p:column headerText="Serial Number" style="width:15%">
+				<h:outputText value="#{propeller.serialNumber}" />
+			</p:column>
+			<p:column headerText="Propeller Cycle"
+				style="text-align:right;width:5%">
+				<h:outputText value="#{propeller.currentPropellerCycle}" />
+			</p:column>
+			<p:column headerText="Flight Hour" style="text-align:right;width:5%">
+				<h:outputText value="#{propeller.currentFlightHour}" />
+			</p:column>
+			<p:column headerText="Status" style="width:10%">
+				<h:outputText value="#{propeller.status.value}" />
+			</p:column>
+			<p:column style="text-align:center">
+				<p:commandButton icon="ui-icon-pencil"
+					update=":centerform:propellerinputfieldset"
+					action="#{propellerManager.setLegend}" title="Edit"
+					onstart="blockInputUI.show()" oncomplete="blockInputUI.hide()"
+					style="width:16px;height:16px">
+					<f:setPropertyActionListener value="#{propeller}"
+						target="#{propellerManager.editPropeller}" />
+				</p:commandButton>
+				<p:commandButton icon="ui-icon-trash" onclick="showDeleteDialog()"
+					action="#{propellerManager.deletePropeller}"
+					update="propellerListTable"
+					style="margin-left:5px;width:16px;height:16px" title="Delete">
+					<f:setPropertyActionListener value="#{propeller}"
+						target="#{propellerManager.deletedPropeller}" />
+				</p:commandButton>
+			</p:column>
+		</p:dataTable>
+	</p:fieldset>
+	<p:spacer height="20" />
+	<h:panelGroup id="inputpanelgroup" style="float:left;width:100%">
+		<p:fieldset legend="#{propellerManager.inputFieldLegend}"
+			toggleable="true" id="propellerinputfieldset">
+			<h:panelGrid columns="1">
+				<h:outputText value="Name" style="font-weight:bold" />
+				<p:inputText value="#{propellerManager.editPropeller.name}"
+					size="50" style="margin-bottom:6px" />
+				<h:outputText value="Number" style="font-weight:bold" />
+				<p:inputText value="#{propellerManager.editPropeller.number}"
+					size="50" style="margin-bottom:6px" />
+				<h:outputText value="Model" style="font-weight:bold" />
+				<p:inputText value="#{propellerManager.editPropeller.model}"
+					size="50" style="margin-bottom:6px" />
+				<h:outputText value="Serial Number" style="font-weight:bold" />
+				<p:inputText value="#{propellerManager.editPropeller.serialNumber}"
+					size="50" style="margin-bottom:6px" />
+				<h:outputText value="Manufacture Year" style="font-weight:bold" />
+				<p:inputText value="#{propellerManager.editPropeller.manufacYear}"
+					size="50" style="margin-bottom:6px" />
+				<h:outputText value="Manufacture Plant" style="font-weight:bold" />
+				<p:inputText value="#{propellerManager.editPropeller.manufacPlant}"
+					size="50" style="margin-bottom:6px" />
+				<h:outputText value="Propeller Cycle" style="font-weight:bold" />
+				<p:inputText
+					value="#{propellerManager.editPropeller.currentPropellerCycle}"
+					size="50" style="margin-bottom:6px" />
+				<h:outputText value="Flight Hour" style="font-weight:bold" />
+				<p:inputText
+					value="#{propellerManager.editPropeller.currentFlightHour}"
+					size="50" style="margin-bottom:6px" />
+			</h:panelGrid>
+			<p:separator />
+			<h:panelGrid columns="2">
+				<p:commandButton value="Save"
+					action="#{propellerManager.savePropeller}"
+					update="propellerListTable,:centerform:propellerinputfieldset, :growl"
+					icon="ui-icon-disk" id="savebtn" />
+				<p:commandButton value="Clear"
+					action="#{propellerManager.clearData}"
+					update="propellerinputfieldset" icon="ui-icon-refresh"
+					id="clearbtn" />
+			</h:panelGrid>
+		</p:fieldset>
+	</h:panelGroup>
+	<p:confirmDialog
+		message="This propeller will be deleted, do you want to proceed ?"
+		header="Delete Propeller" severity="alert"
+		widgetVar="deletePropellerConfirm">
+		<p:commandButton value="Yes"
+			oncomplete="deletePropellerConfirm.hide();blockListUI.hide()"
+			action="#{propellerManager.deletePropeller}"
+			update="propellerListTable,:centerform:propellerinputfieldset, :growl"
+			onstart="blockListUI.show()" />
+		<p:commandButton value="No" onclick="deletePropellerConfirm.hide()" />
+	</p:confirmDialog>
+</body>
+</html>
